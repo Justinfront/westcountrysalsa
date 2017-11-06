@@ -6,6 +6,7 @@ import kha.graphics2.Graphics;
 import kha.Color;
 import kScenes.Scene;
 import kha.math.FastMatrix3;
+import kScenes.MultiTextImage;
 import kScenes.Wrapper;
 import kha.Assets;
 class SceneBuilder {
@@ -35,18 +36,18 @@ class SceneBuilder {
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
 		py += dy + 17 - 2 ;
-		tx = new TextWrapper( "Salsa classes starting Thursday 16th November", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, px, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		var txArr = new Array<TextWrapper>();
+		tx = new TextWrapper( "Salsa classes starting Thursday 16th November", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "Beginners from 7.30pm, social dancing till late.", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, 27, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		tx = new TextWrapper( "Beginners from 7.30pm, social dancing till late.", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, 27, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "At the Rose & Crown, BA2 7SN", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, 27, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
-
+		tx = new TextWrapper( "At the Rose & Crown, BA2 7SN", Assets.fonts.Arimo_Regular, black, bottomTextBody, 2, 27, py, false );
+		txArr[ txArr.length ] = tx;
+		var multiTx = new MultiTextImage( txArr );
+		multiTx.offSide = Compass.WEST_SMALL;
+		scene.addImage( multiTx );
 		py = 357;
 		dy = 37 - 15;
 		px = 27;
@@ -101,39 +102,28 @@ class SceneBuilder {
 		var px = 27.6;
 		var white = 0xd0ffffff;
 		var black = 0xda000000;
-		var tx = new TextWrapper( "Rose & Crown, Public House", Assets.fonts.Arimo_Regular, black, 38, 2, px, py );
-		tx.offSide = Compass.NORTH_WEST_SMALL;
-		scene.addText( tx );
-		py += dy + 2;
-		tx = new TextWrapper( "Hinton Charterhouse", Assets.fonts.Arimo_Regular, black, 33, 2, px, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
-		py += dy;
-		tx = new TextWrapper( "BATH", Assets.fonts.Arimo_Regular, black, 33, 2, px, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
-		py += dy;
-		tx = new TextWrapper( "BA2 7SN", Assets.fonts.Arimo_Regular, black, 33, 2, px, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		var txArr = new Array<TextWrapper>();
+
 		py = 608;
 		dy = 37;
 		px = 27;
-		var tx = new TextWrapper( "Rose & Crown, Public House", Assets.fonts.Arimo_Regular, Color.White, 38, 2, px, py );
+		var tx = new TextWrapper( "Rose & Crown, Public House", Assets.fonts.Arimo_Regular, Color.White, 38, 2, px, py, false );
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
+		
 		py += dy + 2;
-		tx = new TextWrapper( "Hinton Charterhouse", Assets.fonts.Arimo_Regular, white, 33, 2, px, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		tx = new TextWrapper( "Hinton Charterhouse", Assets.fonts.Arimo_Regular, white, 33, 2, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "BATH", Assets.fonts.Arimo_Regular, white, 33, 2, 27, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		tx = new TextWrapper( "BATH", Assets.fonts.Arimo_Regular, white, 33, 2, 27, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "BA2 7SN", Assets.fonts.Arimo_Regular, white, 33, 2, 27, py );
-		tx.offSide = Compass.WEST_SMALL;
-		scene.addText( tx );
+		tx = new TextWrapper( "BA2 7SN", Assets.fonts.Arimo_Regular, white, 33, 2, 27, py, false );
+		txArr[ txArr.length ] = tx;
+		var multiTx = new MultiTextImage( txArr );
+		multiTx.offSide = Compass.WEST_SMALL;
+		scene.addImage( multiTx );
+
 		//addMenu( scene );
 		addCopyRight( scene, red3 );
 		add( scene );
@@ -155,9 +145,9 @@ class SceneBuilder {
 		return scene;
 	}
 	public static function addTitle( scene: Scene, col0: Int, col1: Int ){
-		var tx = new TextWrapper( "West Country", Assets.fonts.Arimo_Regular, col0, 95 - 6, 2, 27, 12+2 );
+		var tx = new TextWrapper( "West Country", Assets.fonts.Arimo_Regular, col0, 95 - 6, 2, 27, 12+2, false );
 		scene.addText( tx );
-		tx = new TextWrapper( "SALSA", Assets.fonts.Arimo_Bold, col1, 118 - 6, -3., 343, 100 );
+		tx = new TextWrapper( "SALSA", Assets.fonts.Arimo_Bold, col1, 118 - 6, -3., 343, 100, false );
 		tx.hasMatrix = true;
 		scene.addText( tx );
 	}
@@ -168,31 +158,30 @@ class SceneBuilder {
 		var dy = 42;
 		var white = 0x5affffff;
 		var black = 0x66000000;
-		tx = new TextWrapper( "location", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		var txArr = new Array<TextWrapper>();
+		tx = new TextWrapper( "location", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "teachers", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		tx = new TextWrapper( "teachers", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( "contact", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		tx = new TextWrapper( "contact", Assets.fonts.Arimo_Regular, black, 38, -1.6, px, py, false );
+		txArr[ txArr.length ] = tx;
 		px = 1024 - 169 + 137;
 		py = 22;
 		dy = 42;
 		white = 0x66ffffff;
-		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py, false );
+		txArr[ txArr.length ] = tx;
 		py += dy;
-		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py );
-		tx.offSide = EAST;
-		scene.addText( tx );
+		tx = new TextWrapper( ">", Assets.fonts.Arimo_Bold, black, 40, null, px, py, false );
+		txArr[ txArr.length ] = tx;
+		var multiTx = new MultiTextImage( txArr );
+		multiTx.offSide = Compass.EAST;
+		scene.addImage( multiTx );
+
 	}
 }

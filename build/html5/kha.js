@@ -191,7 +191,7 @@ var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	kha_System.init({ title : "MainKha", width : 1024, height : 768},function() {
+	kha_System.init({ title : "MainKha", width : 1024, height : 768, samplesPerPixel : 4},function() {
 		new MainKha();
 	});
 };
@@ -2236,6 +2236,57 @@ kScenes_ImageWrapper.prototype = $extend(kScenes_Wrapper.prototype,{
 	}
 	,__class__: kScenes_ImageWrapper
 });
+var kScenes_MultiTextImage = function(arrTx_) {
+	this.arrTx = arrTx_;
+	var left = 10000000.;
+	var top = 10000000.;
+	var right = -10000000.;
+	var bottom = -10000000.;
+	var _g = 0;
+	var _g1 = this.arrTx;
+	while(_g < _g1.length) {
+		var txW = _g1[_g];
+		++_g;
+		var x0 = txW.ex;
+		var y0 = txW.ey;
+		var r0 = x0 + txW.width;
+		var b0 = y0 + txW.height;
+		if(x0 < left) {
+			left = x0;
+		}
+		if(y0 < top) {
+			top = y0;
+		}
+		if(r0 > right) {
+			right = r0;
+		}
+		if(b0 > bottom) {
+			bottom = b0;
+		}
+	}
+	var wid = Math.ceil(right - left);
+	var hi = Math.ceil(bottom - top);
+	var image_ = kha_Image.createRenderTarget(Math.ceil(wid),Math.ceil(hi),null,null,4);
+	var g2 = image_.get_g2();
+	g2.begin();
+	g2.clear(kha__$Color_Color_$Impl_$._new(0));
+	var _g2 = 0;
+	var _g11 = this.arrTx;
+	while(_g2 < _g11.length) {
+		var txW1 = _g11[_g2];
+		++_g2;
+		txW1.generateOnG2(g2,txW1.ex - left,txW1.ey - top);
+	}
+	g2.end();
+	kScenes_ImageWrapper.call(this,image_,left,top);
+};
+$hxClasses["kScenes.MultiTextImage"] = kScenes_MultiTextImage;
+kScenes_MultiTextImage.__name__ = ["kScenes","MultiTextImage"];
+kScenes_MultiTextImage.__super__ = kScenes_ImageWrapper;
+kScenes_MultiTextImage.prototype = $extend(kScenes_ImageWrapper.prototype,{
+	arrTx: null
+	,__class__: kScenes_MultiTextImage
+});
 var kScenes_RectangleWrapper = function(width_,height_,x_,y_) {
 	if(y_ == null) {
 		y_ = 0.;
@@ -2487,67 +2538,106 @@ kScenes_Scene.prototype = {
 		var _g4 = l;
 		while(_g13 < _g4) {
 			var i3 = _g13++;
-			var tx = this.texts[i3];
-			if(tx != null) {
-				if(tx.hasMatrix) {
-					var transformation6 = tx.matrix;
-					g2.setTransformation(transformation6);
-					var _this6 = g2.transformations[g2.transformations.length - 1];
-					_this6._00 = transformation6._00;
-					_this6._10 = transformation6._10;
-					_this6._20 = transformation6._20;
-					_this6._01 = transformation6._01;
-					_this6._11 = transformation6._11;
-					_this6._21 = transformation6._21;
-					_this6._02 = transformation6._02;
-					_this6._12 = transformation6._12;
-					_this6._22 = transformation6._22;
-				}
-				g2.set_font(tx.font);
-				g2.set_fontSize(tx.size);
-				g2.set_color(tx.color);
-				g2.set_opacity(tx.alpha);
-				if(tx.spacing == null) {
-					g2.drawString(tx.content,tx.x,tx.y);
+			var img1 = this.texts[i3];
+			if(img1 != null) {
+				if(!img1.useImage || img1.image == null) {
+					this.renderText(g2,img1);
 				} else {
-					var spacing = tx.spacing;
-					var size = tx.size;
-					var letter;
-					var letterW = 0.;
-					var dW = 0.;
-					var font = tx.font;
-					var _g31 = 0;
-					var _g21 = tx.content.length;
-					while(_g31 < _g21) {
-						var i4 = _g31++;
-						letter = HxOverrides.substr(tx.content,i4,1);
-						dW += letterW;
-						g2.drawString(letter,tx.x + dW,tx.y);
-						if(letter == " ") {
-							letterW = font.width(size,letter);
-						} else {
-							letterW = font.width(size,letter) + spacing;
-						}
+					if(img1.hasMatrix) {
+						var transformation6 = img1.matrix;
+						g2.setTransformation(transformation6);
+						var _this6 = g2.transformations[g2.transformations.length - 1];
+						_this6._00 = transformation6._00;
+						_this6._10 = transformation6._10;
+						_this6._20 = transformation6._20;
+						_this6._01 = transformation6._01;
+						_this6._11 = transformation6._11;
+						_this6._21 = transformation6._21;
+						_this6._02 = transformation6._02;
+						_this6._12 = transformation6._12;
+						_this6._22 = transformation6._22;
 					}
-				}
-				g2.set_opacity(1.);
-				if(tx.hasMatrix) {
-					var transformation7 = new kha_math_FastMatrix3(1,0,0,0,1,0,0,0,1);
-					g2.setTransformation(transformation7);
-					var _this7 = g2.transformations[g2.transformations.length - 1];
-					_this7._00 = transformation7._00;
-					_this7._10 = transformation7._10;
-					_this7._20 = transformation7._20;
-					_this7._01 = transformation7._01;
-					_this7._11 = transformation7._11;
-					_this7._21 = transformation7._21;
-					_this7._02 = transformation7._02;
-					_this7._12 = transformation7._12;
-					_this7._22 = transformation7._22;
+					g2.set_opacity(img1.alpha);
+					g2.drawImage(img1.image,img1.x,img1.y);
+					g2.set_opacity(1.);
+					if(img1.hasMatrix) {
+						var transformation7 = new kha_math_FastMatrix3(1,0,0,0,1,0,0,0,1);
+						g2.setTransformation(transformation7);
+						var _this7 = g2.transformations[g2.transformations.length - 1];
+						_this7._00 = transformation7._00;
+						_this7._10 = transformation7._10;
+						_this7._20 = transformation7._20;
+						_this7._01 = transformation7._01;
+						_this7._11 = transformation7._11;
+						_this7._21 = transformation7._21;
+						_this7._02 = transformation7._02;
+						_this7._12 = transformation7._12;
+						_this7._22 = transformation7._22;
+					}
 				}
 			}
 		}
 		g2.set_color(-1);
+	}
+	,renderText: function(g2,tx) {
+		if(tx != null) {
+			if(tx.hasMatrix) {
+				var transformation = tx.matrix;
+				g2.setTransformation(transformation);
+				var _this = g2.transformations[g2.transformations.length - 1];
+				_this._00 = transformation._00;
+				_this._10 = transformation._10;
+				_this._20 = transformation._20;
+				_this._01 = transformation._01;
+				_this._11 = transformation._11;
+				_this._21 = transformation._21;
+				_this._02 = transformation._02;
+				_this._12 = transformation._12;
+				_this._22 = transformation._22;
+			}
+			g2.set_font(tx.font);
+			g2.set_fontSize(tx.size);
+			g2.set_color(tx.color);
+			g2.set_opacity(tx.alpha);
+			if(tx.spacing == null) {
+				g2.drawString(tx.content,tx.x,tx.y);
+			} else {
+				var spacing = tx.spacing;
+				var size = tx.size;
+				var letter;
+				var letterW = 0.;
+				var dW = 0.;
+				var font = tx.font;
+				var _g1 = 0;
+				var _g = tx.content.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					letter = HxOverrides.substr(tx.content,i,1);
+					dW += letterW;
+					g2.drawString(letter,tx.x + dW,tx.y);
+					if(letter == " ") {
+						letterW = font.width(size,letter);
+					} else {
+						letterW = font.width(size,letter) + spacing;
+					}
+				}
+			}
+			g2.set_opacity(1.);
+			if(tx.hasMatrix) {
+				var transformation1 = new kha_math_FastMatrix3(1,0,0,0,1,0,0,0,1);
+				g2.setTransformation(transformation1);
+				var _this1 = g2.transformations[g2.transformations.length - 1];
+				_this1._00 = transformation1._00;
+				_this1._10 = transformation1._10;
+				_this1._20 = transformation1._20;
+				_this1._01 = transformation1._01;
+				_this1._11 = transformation1._11;
+				_this1._21 = transformation1._21;
+				_this1._02 = transformation1._02;
+				_this1._12 = transformation1._12;
+				_this1._22 = transformation1._22;
+			}
+		}
 	}
 	,__class__: kScenes_Scene
 };
@@ -2638,7 +2728,10 @@ kScenes_SceneDirector.prototype = {
 	}
 	,__class__: kScenes_SceneDirector
 };
-var kScenes_TextWrapper = function(content_,font_,color_,size_,spacing_,x_,y_) {
+var kScenes_TextWrapper = function(content_,font_,color_,size_,spacing_,x_,y_,useImage_) {
+	if(useImage_ == null) {
+		useImage_ = true;
+	}
 	if(y_ == null) {
 		y_ = 0.;
 	}
@@ -2653,9 +2746,26 @@ var kScenes_TextWrapper = function(content_,font_,color_,size_,spacing_,x_,y_) {
 	this.color = color_;
 	this.size = size_;
 	this.spacing = spacing_;
-	var width_ = this.font.width(this.size,this.content);
+	this.useImage = useImage_;
+	var width_;
+	if(this.spacing == null) {
+		width_ = this.font.width(this.size,this.content);
+	} else {
+		var dW = 0.;
+		var _g1 = 0;
+		var _g = this.content.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			dW += this.font.width(this.size,HxOverrides.substr(this.content,i,1));
+			dW += this.spacing;
+		}
+		width_ = dW - this.spacing;
+	}
 	var height_ = this.font.height(this.size);
 	kScenes_Wrapper.call(this,width_,height_,x_,y_);
+	if(this.useImage) {
+		this.generateImage();
+	}
 };
 $hxClasses["kScenes.TextWrapper"] = kScenes_TextWrapper;
 kScenes_TextWrapper.__name__ = ["kScenes","TextWrapper"];
@@ -2666,10 +2776,82 @@ kScenes_TextWrapper.prototype = $extend(kScenes_Wrapper.prototype,{
 	,color: null
 	,size: null
 	,spacing: null
+	,image: null
+	,useImage: null
 	,clone: function() {
 		var textWrapper = new kScenes_TextWrapper(this.content,this.font,this.color,this.size,this.x,this.y);
 		textWrapper.alpha = this.alpha;
 		return textWrapper;
+	}
+	,generateImage: function() {
+		this.image = kha_Image.createRenderTarget(Math.ceil(this.width),Math.ceil(this.height),null,null,4);
+		var g2 = this.image.get_g2();
+		g2.begin();
+		g2.clear(kha__$Color_Color_$Impl_$._new(0));
+		g2.set_font(this.font);
+		g2.set_fontSize(this.size);
+		g2.set_color(this.color);
+		g2.set_opacity(1.0);
+		if(this.spacing == null) {
+			g2.drawString(this.content,0,0);
+		} else {
+			var spacing = this.spacing;
+			var size = this.size;
+			var letter;
+			var letterW = 0.;
+			var dW = 0.;
+			var font = this.font;
+			var _g1 = 0;
+			var _g = this.content.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				letter = HxOverrides.substr(this.content,i,1);
+				dW += letterW;
+				g2.drawString(letter,dW,0);
+				if(letter == " ") {
+					letterW = font.width(size,letter);
+				} else {
+					letterW = font.width(size,letter) + spacing;
+				}
+			}
+		}
+		g2.end();
+		this.useImage = true;
+	}
+	,generateOnG2: function(g2,dx,dy) {
+		if(dy == null) {
+			dy = 0.;
+		}
+		if(dx == null) {
+			dx = 0.;
+		}
+		g2.set_font(this.font);
+		g2.set_fontSize(this.size);
+		g2.set_color(this.color);
+		g2.set_opacity(1.0);
+		if(this.spacing == null) {
+			g2.drawString(this.content,dx,dy);
+		} else {
+			var spacing = this.spacing;
+			var size = this.size;
+			var letter;
+			var letterW = 0.;
+			var dW = 0.;
+			var font = this.font;
+			var _g1 = 0;
+			var _g = this.content.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				letter = HxOverrides.substr(this.content,i,1);
+				dW += letterW;
+				g2.drawString(letter,dW + dx,dy);
+				if(letter == " ") {
+					letterW = font.width(size,letter);
+				} else {
+					letterW = font.width(size,letter) + spacing;
+				}
+			}
+		}
 	}
 	,__class__: kScenes_TextWrapper
 });
@@ -2786,16 +2968,10 @@ kha__$Assets_BlobList.prototype = {
 	,__class__: kha__$Assets_BlobList
 };
 var kha__$Assets_FontList = function() {
-	this.names = ["Arimo_Bold","Arimo_BoldItalic","Arimo_Italic","Arimo_Regular"];
+	this.names = ["Arimo_Bold","Arimo_Regular"];
 	this.Arimo_RegularDescription = { files : ["Arimo-Regular.ttf"], type : "font", name : "Arimo_Regular"};
 	this.Arimo_RegularName = "Arimo_Regular";
 	this.Arimo_Regular = null;
-	this.Arimo_ItalicDescription = { files : ["Arimo-Italic.ttf"], type : "font", name : "Arimo_Italic"};
-	this.Arimo_ItalicName = "Arimo_Italic";
-	this.Arimo_Italic = null;
-	this.Arimo_BoldItalicDescription = { files : ["Arimo-BoldItalic.ttf"], type : "font", name : "Arimo_BoldItalic"};
-	this.Arimo_BoldItalicName = "Arimo_BoldItalic";
-	this.Arimo_BoldItalic = null;
 	this.Arimo_BoldDescription = { files : ["Arimo-Bold.ttf"], type : "font", name : "Arimo_Bold"};
 	this.Arimo_BoldName = "Arimo_Bold";
 	this.Arimo_Bold = null;
@@ -2814,30 +2990,6 @@ kha__$Assets_FontList.prototype = {
 	,Arimo_BoldUnload: function() {
 		this.Arimo_Bold.unload();
 		this.Arimo_Bold = null;
-	}
-	,Arimo_BoldItalic: null
-	,Arimo_BoldItalicName: null
-	,Arimo_BoldItalicDescription: null
-	,Arimo_BoldItalicLoad: function(done) {
-		kha_Assets.loadFont("Arimo_BoldItalic",function(font) {
-			done();
-		});
-	}
-	,Arimo_BoldItalicUnload: function() {
-		this.Arimo_BoldItalic.unload();
-		this.Arimo_BoldItalic = null;
-	}
-	,Arimo_Italic: null
-	,Arimo_ItalicName: null
-	,Arimo_ItalicDescription: null
-	,Arimo_ItalicLoad: function(done) {
-		kha_Assets.loadFont("Arimo_Italic",function(font) {
-			done();
-		});
-	}
-	,Arimo_ItalicUnload: function() {
-		this.Arimo_Italic.unload();
-		this.Arimo_Italic = null;
 	}
 	,Arimo_Regular: null
 	,Arimo_RegularName: null
@@ -28336,9 +28488,9 @@ westCountrySalsa_SceneBuilder.addCopyRight = function(scene,col0) {
 	scene.addText(tx);
 };
 westCountrySalsa_SceneBuilder.addTitle = function(scene,col0,col1) {
-	var tx = new kScenes_TextWrapper("West Country",kha_Assets.fonts.Arimo_Regular,col0,89,2,27,14);
+	var tx = new kScenes_TextWrapper("West Country",kha_Assets.fonts.Arimo_Regular,col0,89,2,27,14,false);
 	scene.addText(tx);
-	tx = new kScenes_TextWrapper("SALSA",kha_Assets.fonts.Arimo_Bold,col1,112,-3.,343,100);
+	tx = new kScenes_TextWrapper("SALSA",kha_Assets.fonts.Arimo_Bold,col1,112,-3.,343,100,false);
 	tx.hasMatrix = true;
 	scene.addText(tx);
 };
@@ -28349,32 +28501,30 @@ westCountrySalsa_SceneBuilder.addMenu = function(scene) {
 	var dy = 42;
 	var white = 1526726655;
 	var black = 1711276032;
-	tx = new kScenes_TextWrapper("location",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	var txArr = [];
+	tx = new kScenes_TextWrapper("location",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
+	txArr[txArr.length] = tx;
 	py += dy;
-	tx = new kScenes_TextWrapper("teachers",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	tx = new kScenes_TextWrapper("teachers",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
+	txArr[txArr.length] = tx;
 	py += dy;
-	tx = new kScenes_TextWrapper("contact",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	tx = new kScenes_TextWrapper("contact",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
+	txArr[txArr.length] = tx;
 	px = 992;
 	py = 22;
 	dy = 42;
 	white = 1728053247;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
+	txArr[txArr.length] = tx;
 	py += dy;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
+	txArr[txArr.length] = tx;
 	py += dy;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py);
-	tx.offSide = kScenes_Compass.EAST;
-	scene.addText(tx);
+	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
+	txArr[txArr.length] = tx;
+	var multiTx = new kScenes_MultiTextImage(txArr);
+	multiTx.offSide = kScenes_Compass.EAST;
+	scene.addImage(multiTx);
 };
 westCountrySalsa_SceneBuilder.prototype = {
 	director: null
@@ -28395,17 +28545,18 @@ westCountrySalsa_SceneBuilder.prototype = {
 		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx);
 		py += dy + 17 - 2;
-		tx = new kScenes_TextWrapper("Salsa classes starting Thursday 16th November",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,px,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
+		var txArr = [];
+		tx = new kScenes_TextWrapper("Salsa classes starting Thursday 16th November",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,px,py,false);
+		txArr[txArr.length] = tx;
 		py += dy;
-		tx = new kScenes_TextWrapper("Beginners from 7.30pm, social dancing till late.",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
+		tx = new kScenes_TextWrapper("Beginners from 7.30pm, social dancing till late.",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py,false);
+		txArr[txArr.length] = tx;
 		py += dy;
-		tx = new kScenes_TextWrapper("At the Rose & Crown, BA2 7SN",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
+		tx = new kScenes_TextWrapper("At the Rose & Crown, BA2 7SN",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py,false);
+		txArr[txArr.length] = tx;
+		var multiTx = new kScenes_MultiTextImage(txArr);
+		multiTx.offSide = kScenes_Compass.WEST_SMALL;
+		scene.addImage(multiTx);
 		py = 357;
 		dy = 22;
 		px = 27;
@@ -28458,39 +28609,25 @@ westCountrySalsa_SceneBuilder.prototype = {
 		var px = 27.6;
 		var white = -788529153;
 		var black = -637534208;
-		var tx = new kScenes_TextWrapper("Rose & Crown, Public House",kha_Assets.fonts.Arimo_Regular,black,38,2,px,py);
-		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
-		scene.addText(tx);
-		py += dy + 2;
-		tx = new kScenes_TextWrapper("Hinton Charterhouse",kha_Assets.fonts.Arimo_Regular,black,33,2,px,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
-		py += dy;
-		tx = new kScenes_TextWrapper("BATH",kha_Assets.fonts.Arimo_Regular,black,33,2,px,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
-		py += dy;
-		tx = new kScenes_TextWrapper("BA2 7SN",kha_Assets.fonts.Arimo_Regular,black,33,2,px,py);
-		tx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx);
+		var txArr = [];
 		py = 608;
 		dy = 37;
 		px = 27;
-		var tx1 = new kScenes_TextWrapper("Rose & Crown, Public House",kha_Assets.fonts.Arimo_Regular,-1,38,2,px,py);
-		tx1.offSide = kScenes_Compass.NORTH_WEST_SMALL;
-		scene.addText(tx1);
+		var tx = new kScenes_TextWrapper("Rose & Crown, Public House",kha_Assets.fonts.Arimo_Regular,-1,38,2,px,py,false);
+		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
+		scene.addText(tx);
 		py += dy + 2;
-		tx1 = new kScenes_TextWrapper("Hinton Charterhouse",kha_Assets.fonts.Arimo_Regular,white,33,2,px,py);
-		tx1.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx1);
+		tx = new kScenes_TextWrapper("Hinton Charterhouse",kha_Assets.fonts.Arimo_Regular,white,33,2,px,py,false);
+		txArr[txArr.length] = tx;
 		py += dy;
-		tx1 = new kScenes_TextWrapper("BATH",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py);
-		tx1.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx1);
+		tx = new kScenes_TextWrapper("BATH",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py,false);
+		txArr[txArr.length] = tx;
 		py += dy;
-		tx1 = new kScenes_TextWrapper("BA2 7SN",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py);
-		tx1.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addText(tx1);
+		tx = new kScenes_TextWrapper("BA2 7SN",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py,false);
+		txArr[txArr.length] = tx;
+		var multiTx = new kScenes_MultiTextImage(txArr);
+		multiTx.offSide = kScenes_Compass.WEST_SMALL;
+		scene.addImage(multiTx);
 		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red3);
 		this.add(scene);
 		return scene;

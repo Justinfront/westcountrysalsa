@@ -7,7 +7,7 @@ import kha.Assets;
 import kScenes.SceneDirector;
 import westCountrySalsa.SceneBuilder;
 class MainKha {
-    var sceneDirector:    SceneDirector;
+    var sceneDirector:      SceneDirector;
     var sceneBuilder:       SceneBuilder;
     public function new() {
         Assets.loadEverything(loadAll);
