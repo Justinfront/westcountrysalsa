@@ -203,17 +203,43 @@ MainKha.__name__ = ["MainKha"];
 MainKha.prototype = {
 	sceneDirector: null
 	,sceneBuilder: null
+	,start: null
+	,venue: null
+	,teachers: null
+	,pictures: null
 	,loadAll: function() {
 		this.sceneDirector = new kScenes_SceneDirector();
 		this.sceneBuilder = new westCountrySalsa_SceneBuilder(this.sceneDirector);
-		var start = this.sceneBuilder.home();
-		this.sceneBuilder.venue();
-		this.sceneBuilder.teachers();
-		start.show();
+		this.start = this.sceneBuilder.home();
+		this.venue = this.sceneBuilder.venue();
+		this.teachers = this.sceneBuilder.teachers();
+		this.pictures = this.sceneBuilder.pictures();
+		this.sceneDirector.buttonPress = $bind(this,this.changeScene);
+		this.start.show();
 		kha_System.notifyOnRender($bind(this,this.render));
 		kha_Scheduler.addTimeTask($bind(this,this.update),0,0.0166666666666666664);
 	}
+	,changeScene: function(scene,id) {
+		switch(id) {
+		case 0:
+			this.sceneDirector.gotoScene(this.start);
+			break;
+		case 1:
+			this.sceneDirector.gotoScene(this.venue);
+			break;
+		case 2:
+			this.sceneDirector.gotoScene(this.teachers);
+			break;
+		case 3:
+			this.sceneDirector.gotoScene(this.pictures);
+			break;
+		}
+	}
 	,update: function() {
+		var _this = this.sceneDirector;
+		if(_this.scenes[_this.sceneCount] == this.pictures) {
+			this.sceneBuilder.updateScroller();
+		}
 	}
 	,render: function(framebuffer) {
 		var g2 = framebuffer.get_g2();
@@ -2055,6 +2081,80 @@ js_html_compat_Uint8Array._subarray = function(start,end) {
 	a.byteOffset = start;
 	return a;
 };
+var kScenes_ArrowKeys = function() {
+	this.enable = true;
+	kha_input_Keyboard.get().notify($bind(this,this.keyDown),$bind(this,this.keyUp));
+};
+$hxClasses["kScenes.ArrowKeys"] = kScenes_ArrowKeys;
+kScenes_ArrowKeys.__name__ = ["kScenes","ArrowKeys"];
+kScenes_ArrowKeys.prototype = {
+	downLeft: null
+	,downRight: null
+	,downUp: null
+	,downDown: null
+	,upLeft: null
+	,upRight: null
+	,upUp: null
+	,upDown: null
+	,enable: null
+	,keyDown: function(keyCode) {
+		if(!this.enable) {
+			return;
+		}
+		switch(keyCode) {
+		case 37:
+			if(this.downLeft != null) {
+				this.downLeft();
+			}
+			break;
+		case 38:
+			if(this.downUp != null) {
+				this.downUp();
+			}
+			break;
+		case 39:
+			if(this.downRight != null) {
+				this.downRight();
+			}
+			break;
+		case 40:
+			if(this.downDown != null) {
+				this.downDown();
+			}
+			break;
+		default:
+		}
+	}
+	,keyUp: function(keyCode) {
+		if(!this.enable) {
+			return;
+		}
+		switch(keyCode) {
+		case 37:
+			if(this.upLeft != null) {
+				this.upLeft();
+			}
+			break;
+		case 38:
+			if(this.upUp != null) {
+				this.upUp();
+			}
+			break;
+		case 39:
+			if(this.upRight != null) {
+				this.upRight();
+			}
+			break;
+		case 40:
+			if(this.upDown != null) {
+				this.upDown();
+			}
+			break;
+		default:
+		}
+	}
+	,__class__: kScenes_ArrowKeys
+};
 var kScenes_Wrapper = function(width_,height_,x_,y_) {
 	if(y_ == null) {
 		y_ = 0.;
@@ -2063,6 +2163,7 @@ var kScenes_Wrapper = function(width_,height_,x_,y_) {
 		x_ = 0.;
 	}
 	this.hasMatrix = false;
+	this.hitable = false;
 	this.offSide = kScenes_Compass.CENTRE;
 	this.small = 40.;
 	this.ey = 0.;
@@ -2201,16 +2302,16 @@ kScenes_Wrapper.prototype = {
 		}
 	}
 	,show: function(delay) {
-		tweenx909_TweenX.to(this,{ alpha : 1.0},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 119, className : "kScenes.Wrapper", methodName : "show"}).delay(delay).time(.75).ease(tweenxcore_Easing.quadIn).ease(tweenxcore_Easing.quadIn);
+		tweenx909_TweenX.to(this,{ alpha : 1.0},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 121, className : "kScenes.Wrapper", methodName : "show"}).delay(delay).time(.75).ease(tweenxcore_Easing.quadIn).ease(tweenxcore_Easing.quadIn);
 		this.off();
 		this.moveTo(this.ex,this.ey,delay);
 	}
 	,hide: function(delay) {
-		tweenx909_TweenX.to(this,{ alpha : 0.0},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 124, className : "kScenes.Wrapper", methodName : "hide"}).delay(delay).time(.55).ease(tweenxcore_Easing.quadOut);
+		tweenx909_TweenX.to(this,{ alpha : 0.0},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 126, className : "kScenes.Wrapper", methodName : "hide"}).delay(delay).time(.55).ease(tweenxcore_Easing.quadOut);
 		this.tweenOff(delay);
 	}
 	,moveTo: function(x_,y_,delay) {
-		tweenx909_TweenX.to(this,{ x : x_, y : y_},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 128, className : "kScenes.Wrapper", methodName : "moveTo"}).delay(delay).time(.75).ease(tweenxcore_Easing.quadIn).ease(tweenxcore_Easing.quadIn);
+		tweenx909_TweenX.to(this,{ x : x_, y : y_},null,null,null,null,null,null,null,null,{ fileName : "Wrapper.hx", lineNumber : 130, className : "kScenes.Wrapper", methodName : "moveTo"}).delay(delay).time(.75).ease(tweenxcore_Easing.quadIn).ease(tweenxcore_Easing.quadIn);
 	}
 	,__class__: kScenes_Wrapper
 };
@@ -2236,6 +2337,53 @@ kScenes_ImageWrapper.prototype = $extend(kScenes_Wrapper.prototype,{
 	}
 	,__class__: kScenes_ImageWrapper
 });
+var kScenes_MouseHit = function() {
+	this.enable = true;
+	this.y = -1;
+	this.x = -1;
+	kha_input_Mouse.get().notify($bind(this,this.onMouseDown),$bind(this,this.onMouseUp),$bind(this,this.onMouseMove),null,null);
+};
+$hxClasses["kScenes.MouseHit"] = kScenes_MouseHit;
+kScenes_MouseHit.__name__ = ["kScenes","MouseHit"];
+kScenes_MouseHit.prototype = {
+	x: null
+	,y: null
+	,change: null
+	,down: null
+	,up: null
+	,enable: null
+	,onMouseDown: function(button,x,y) {
+		if(!this.enable) {
+			return;
+		}
+		if(button == 0 && this.down != null) {
+			this.down(x,y);
+		}
+		var tmp = button == 1;
+	}
+	,onMouseUp: function(button,x,y) {
+		if(!this.enable) {
+			return;
+		}
+		if(button == 0 && this.up != null) {
+			this.up(x,y);
+		}
+		var tmp = button == 1;
+	}
+	,onMouseMove: function(x,y,cx,cy) {
+		if(!this.enable) {
+			return;
+		}
+		if(x > 0 && y > 0 && this.change != null) {
+			this.change(x,y);
+		}
+	}
+	,wheelListener: function(val) {
+	}
+	,leaveListener: function(x,y) {
+	}
+	,__class__: kScenes_MouseHit
+};
 var kScenes_MultiTextImage = function(arrTx_) {
 	this.arrTx = arrTx_;
 	var left = 10000000.;
@@ -2287,21 +2435,30 @@ kScenes_MultiTextImage.prototype = $extend(kScenes_ImageWrapper.prototype,{
 	arrTx: null
 	,__class__: kScenes_MultiTextImage
 });
-var kScenes_RectangleWrapper = function(width_,height_,x_,y_) {
+var kScenes_RectangleWrapper = function(width_,height_,colorLine_,colorFill_,strength_,x_,y_) {
 	if(y_ == null) {
 		y_ = 0.;
 	}
 	if(x_ == null) {
 		x_ = 0.;
 	}
+	this.strength = 0.;
+	this.colorFill = null;
+	this.colorLine = null;
+	this.colorLine = colorLine_;
+	this.colorFill = colorFill_;
+	this.strength = strength_;
 	kScenes_Wrapper.call(this,width_,height_,x_,y_);
 };
 $hxClasses["kScenes.RectangleWrapper"] = kScenes_RectangleWrapper;
 kScenes_RectangleWrapper.__name__ = ["kScenes","RectangleWrapper"];
 kScenes_RectangleWrapper.__super__ = kScenes_Wrapper;
 kScenes_RectangleWrapper.prototype = $extend(kScenes_Wrapper.prototype,{
-	clone: function() {
-		var rectangleWrapper = new kScenes_RectangleWrapper(this.width,this.height,this.x,this.y);
+	colorLine: null
+	,colorFill: null
+	,strength: null
+	,clone: function() {
+		var rectangleWrapper = new kScenes_RectangleWrapper(this.width,this.height,this.colorLine,this.colorFill,this.strength,this.x,this.y);
 		rectangleWrapper.alpha = this.alpha;
 		return rectangleWrapper;
 	}
@@ -2312,6 +2469,7 @@ var kScenes_Scene = function(sceneName_) {
 	this.backRectangleTotal = 0;
 	this.textTotal = 0;
 	this.imageTotal = 0;
+	this.hitWraps = [];
 	this.texts = [];
 	this.frontRectangles = [];
 	this.images = [];
@@ -2325,11 +2483,115 @@ kScenes_Scene.prototype = {
 	,images: null
 	,frontRectangles: null
 	,texts: null
+	,hitWraps: null
 	,imageTotal: null
 	,textTotal: null
 	,backRectangleTotal: null
 	,frontRectangleTotal: null
 	,sceneName: null
+	,renderToImage: function() {
+		var left = 10000000.;
+		var top = 10000000.;
+		var right = -10000000.;
+		var bottom = -10000000.;
+		var _g = 0;
+		var _g1 = this.backRectangles;
+		while(_g < _g1.length) {
+			var rect = _g1[_g];
+			++_g;
+			var x0 = rect.ex;
+			var y0 = rect.ey;
+			var r0 = x0 + rect.width;
+			var b0 = y0 + rect.height;
+			if(x0 < left) {
+				left = x0;
+			}
+			if(y0 < top) {
+				top = y0;
+			}
+			if(r0 > right) {
+				right = r0;
+			}
+			if(b0 > bottom) {
+				bottom = b0;
+			}
+		}
+		var _g2 = 0;
+		var _g11 = this.images;
+		while(_g2 < _g11.length) {
+			var img = _g11[_g2];
+			++_g2;
+			var x01 = img.ex;
+			var y01 = img.ey;
+			var r01 = x01 + img.width;
+			var b01 = y01 + img.height;
+			if(x01 < left) {
+				left = x01;
+			}
+			if(y01 < top) {
+				top = y01;
+			}
+			if(r01 > right) {
+				right = r01;
+			}
+			if(b01 > bottom) {
+				bottom = b01;
+			}
+		}
+		var _g3 = 0;
+		var _g12 = this.texts;
+		while(_g3 < _g12.length) {
+			var tx = _g12[_g3];
+			++_g3;
+			var x02 = tx.ex;
+			var y02 = tx.ey;
+			var r02 = x02 + tx.width;
+			var b02 = y02 + tx.height;
+			if(x02 < left) {
+				left = x02;
+			}
+			if(y02 < top) {
+				top = y02;
+			}
+			if(r02 > right) {
+				right = r02;
+			}
+			if(b02 > bottom) {
+				bottom = b02;
+			}
+		}
+		var _g4 = 0;
+		var _g13 = this.frontRectangles;
+		while(_g4 < _g13.length) {
+			var rect1 = _g13[_g4];
+			++_g4;
+			var x03 = rect1.ex;
+			var y03 = rect1.ey;
+			var r03 = x03 + rect1.width;
+			var b03 = y03 + rect1.height;
+			if(x03 < left) {
+				left = x03;
+			}
+			if(y03 < top) {
+				top = y03;
+			}
+			if(r03 > right) {
+				right = r03;
+			}
+			if(b03 > bottom) {
+				bottom = b03;
+			}
+		}
+		var wid = Math.ceil(right);
+		var hi = Math.ceil(bottom);
+		var image_ = kha_Image.createRenderTarget(Math.ceil(wid),Math.ceil(hi),null,null,4);
+		var g2 = image_.get_g2();
+		g2.begin();
+		g2.clear(kha__$Color_Color_$Impl_$._new(0));
+		this.render(g2);
+		g2.end();
+		return image_;
+	}
 	,addBackRectangle: function(item) {
 		this.backRectangles[this.backRectangles.length] = item;
 		this.backRectangleTotal++;
@@ -2345,6 +2607,9 @@ kScenes_Scene.prototype = {
 	,addText: function(item) {
 		this.texts[this.texts.length] = item;
 		this.textTotal++;
+	}
+	,addHit: function(item) {
+		this.hitWraps[this.hitWraps.length] = item;
 	}
 	,hide: function(delay) {
 		if(delay == null) {
@@ -2412,6 +2677,23 @@ kScenes_Scene.prototype = {
 			rect1.show(delay);
 		}
 	}
+	,checkHit: function(x,y) {
+		if(this.texts[0].alpha != 1.) {
+			return -1;
+		}
+		var _g1 = 0;
+		var _g = this.hitWraps.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var item = this.hitWraps[i];
+			if(item.hitable) {
+				if(item.hitTest(x,y)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
 	,render: function(g2) {
 		var l = this.backRectangleTotal;
 		var _g1 = 0;
@@ -2435,7 +2717,14 @@ kScenes_Scene.prototype = {
 					_this._22 = transformation._22;
 				}
 				g2.set_opacity(rect.alpha);
-				g2.drawRect(rect.x,rect.y,rect.width,rect.height);
+				if(rect.colorFill != null) {
+					g2.set_color(rect.colorFill);
+					g2.fillRect(rect.x,rect.y,rect.width,rect.height);
+				}
+				if(rect.colorLine != null) {
+					g2.set_color(rect.colorLine);
+					g2.drawRect(rect.x,rect.y,rect.width,rect.height,rect.strength);
+				}
 				g2.set_opacity(1.);
 				if(rect.hasMatrix) {
 					var transformation1 = new kha_math_FastMatrix3(1,0,0,0,1,0,0,0,1);
@@ -2453,6 +2742,7 @@ kScenes_Scene.prototype = {
 				}
 			}
 		}
+		g2.set_color(-1);
 		l = this.imageTotal;
 		var _g11 = 0;
 		var _g2 = l;
@@ -2515,7 +2805,14 @@ kScenes_Scene.prototype = {
 					_this4._22 = transformation4._22;
 				}
 				g2.set_opacity(rect1.alpha);
-				g2.drawRect(rect1.x,rect1.y,rect1.width,rect1.height);
+				if(rect1.colorFill != null) {
+					g2.set_color(rect1.colorFill);
+					g2.fillRect(rect1.x,rect1.y,rect1.width,rect1.height);
+				}
+				if(rect1.colorLine != null) {
+					g2.set_color(rect1.colorLine);
+					g2.drawRect(rect1.x,rect1.y,rect1.width,rect1.height,rect1.strength);
+				}
 				g2.set_opacity(1.);
 				if(rect1.hasMatrix) {
 					var transformation5 = new kha_math_FastMatrix3(1,0,0,0,1,0,0,0,1);
@@ -2533,6 +2830,7 @@ kScenes_Scene.prototype = {
 				}
 			}
 		}
+		g2.set_color(-1);
 		l = this.textTotal;
 		var _g13 = 0;
 		var _g4 = l;
@@ -2643,6 +2941,7 @@ kScenes_Scene.prototype = {
 };
 var kScenes_SceneDirector = function() {
 	this.scenes = [];
+	this.boolItem = false;
 	this.sceneCount = 0;
 };
 $hxClasses["kScenes.SceneDirector"] = kScenes_SceneDirector;
@@ -2650,37 +2949,19 @@ kScenes_SceneDirector.__name__ = ["kScenes","SceneDirector"];
 kScenes_SceneDirector.prototype = {
 	sceneCount: null
 	,sceneTotal: null
+	,boolItem: null
 	,scenes: null
+	,buttonPress: null
+	,buttonOver: null
 	,enableKeyControl: function() {
-		kha_input_Keyboard.get().notify($bind(this,this.keyDown),$bind(this,this.keyUp));
+		var arrowKeys = new kScenes_ArrowKeys();
+		arrowKeys.downLeft = $bind(this,this.sceneBack);
+		arrowKeys.downRight = $bind(this,this.sceneForward);
 	}
-	,keyDown: function(keyCode) {
-		switch(keyCode) {
-		case 37:
-			this.sceneBack();
-			break;
-		case 38:
-			break;
-		case 39:
-			this.sceneForward();
-			break;
-		case 40:
-			break;
-		default:
-		}
-	}
-	,keyUp: function(keyCode) {
-		switch(keyCode) {
-		case 37:
-			break;
-		case 38:
-			break;
-		case 39:
-			break;
-		case 40:
-			break;
-		default:
-		}
+	,enableMouseInteraction: function() {
+		var mouseHit = new kScenes_MouseHit();
+		mouseHit.down = $bind(this,this.mouseDown);
+		mouseHit.change = $bind(this,this.moveOver);
 	}
 	,empty: function() {
 		var scene = new kScenes_Scene("Start");
@@ -2696,6 +2977,53 @@ kScenes_SceneDirector.prototype = {
 	}
 	,sceneBack: function() {
 		this.changeScene(this.sceneCount - 1);
+	}
+	,mouseDown: function(x,y) {
+		var current = this.scenes[this.sceneCount];
+		var id = current.checkHit(x,y);
+		if(id != -1 && this.buttonPress != null) {
+			this.buttonPress(current,id);
+		}
+	}
+	,moveOver: function(x,y) {
+		var current = this.scenes[this.sceneCount];
+		var id = current.checkHit(x,y);
+		if(id != -1 && this.buttonOver != null) {
+			this.buttonOver(current,id);
+		}
+	}
+	,currentScene: function() {
+		return this.scenes[this.sceneCount];
+	}
+	,gotoSceneByName: function(str) {
+		var target = -1;
+		var _g1 = 0;
+		var _g = this.scenes.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this.scenes[i].sceneName == str) {
+				target = i;
+				break;
+			}
+		}
+		if(target != -1) {
+			this.changeScene(target);
+		}
+	}
+	,gotoScene: function(scene) {
+		var target = -1;
+		var _g1 = 0;
+		var _g = this.scenes.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this.scenes[i] == scene) {
+				target = i;
+				break;
+			}
+		}
+		if(target != -1) {
+			this.changeScene(target);
+		}
 	}
 	,changeScene: function(i) {
 		if(i < 0) {
@@ -2896,21 +3224,249 @@ kScenes_Compass.NORTH_EAST_SMALL = ["NORTH_EAST_SMALL",12];
 kScenes_Compass.NORTH_EAST_SMALL.toString = $estr;
 kScenes_Compass.NORTH_EAST_SMALL.__enum__ = kScenes_Compass;
 var kha__$Assets_ImageList = function() {
-	this.names = ["RoseAndCrown","westCountryHome","westCountrySalsaPlain"];
+	this.names = ["IMG_20171029_WA0000","IMG_20171029_WA0012","IMG_20171029_WA0030","IMG_20171029_WA0055","IMG_20171028_134048","IMG_20171028_134103","IMG_20171028_134144","IMG_20171028_134154","IMG_20171028_135319","IMG_20171028_135432","IMG_20171028_135745","IMG_20171028_140755","IMG_20171028_140904","IMG_20171028_141142","RoseAndCrown","pubInside","pubInsideSmall","pubStairs","pubStairsSmall","upStairs","upStairsSmall","westCountryHome","westCountrySalsaPlain"];
 	this.westCountrySalsaPlainDescription = { files : ["westCountrySalsaPlain.jpg"], original_height : 768, type : "image", original_width : 1024, name : "westCountrySalsaPlain"};
 	this.westCountrySalsaPlainName = "westCountrySalsaPlain";
 	this.westCountrySalsaPlain = null;
 	this.westCountryHomeDescription = { files : ["westCountryHome.jpg"], original_height : 768, type : "image", original_width : 1024, name : "westCountryHome"};
 	this.westCountryHomeName = "westCountryHome";
 	this.westCountryHome = null;
+	this.upStairsSmallDescription = { files : ["upStairsSmall.jpg"], original_height : 155, type : "image", original_width : 200, name : "upStairsSmall"};
+	this.upStairsSmallName = "upStairsSmall";
+	this.upStairsSmall = null;
+	this.upStairsDescription = { files : ["upStairs.jpg"], original_height : 303, type : "image", original_width : 390, name : "upStairs"};
+	this.upStairsName = "upStairs";
+	this.upStairs = null;
+	this.pubStairsSmallDescription = { files : ["pubStairsSmall.jpg"], original_height : 155, type : "image", original_width : 200, name : "pubStairsSmall"};
+	this.pubStairsSmallName = "pubStairsSmall";
+	this.pubStairsSmall = null;
+	this.pubStairsDescription = { files : ["pubStairs.jpg"], original_height : 303, type : "image", original_width : 390, name : "pubStairs"};
+	this.pubStairsName = "pubStairs";
+	this.pubStairs = null;
+	this.pubInsideSmallDescription = { files : ["pubInsideSmall.jpg"], original_height : 154, type : "image", original_width : 200, name : "pubInsideSmall"};
+	this.pubInsideSmallName = "pubInsideSmall";
+	this.pubInsideSmall = null;
+	this.pubInsideDescription = { files : ["pubInside.jpg"], original_height : 297, type : "image", original_width : 386, name : "pubInside"};
+	this.pubInsideName = "pubInside";
+	this.pubInside = null;
 	this.RoseAndCrownDescription = { files : ["RoseAndCrown.jpg"], original_height : 303, type : "image", original_width : 390, name : "RoseAndCrown"};
 	this.RoseAndCrownName = "RoseAndCrown";
 	this.RoseAndCrown = null;
+	this.IMG_20171028_141142Description = { files : ["IMG_20171028_141142.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_141142"};
+	this.IMG_20171028_141142Name = "IMG_20171028_141142";
+	this.IMG_20171028_141142 = null;
+	this.IMG_20171028_140904Description = { files : ["IMG_20171028_140904.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_140904"};
+	this.IMG_20171028_140904Name = "IMG_20171028_140904";
+	this.IMG_20171028_140904 = null;
+	this.IMG_20171028_140755Description = { files : ["IMG_20171028_140755.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_140755"};
+	this.IMG_20171028_140755Name = "IMG_20171028_140755";
+	this.IMG_20171028_140755 = null;
+	this.IMG_20171028_135745Description = { files : ["IMG_20171028_135745.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_135745"};
+	this.IMG_20171028_135745Name = "IMG_20171028_135745";
+	this.IMG_20171028_135745 = null;
+	this.IMG_20171028_135432Description = { files : ["IMG_20171028_135432.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_135432"};
+	this.IMG_20171028_135432Name = "IMG_20171028_135432";
+	this.IMG_20171028_135432 = null;
+	this.IMG_20171028_135319Description = { files : ["IMG_20171028_135319.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_135319"};
+	this.IMG_20171028_135319Name = "IMG_20171028_135319";
+	this.IMG_20171028_135319 = null;
+	this.IMG_20171028_134154Description = { files : ["IMG_20171028_134154.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_134154"};
+	this.IMG_20171028_134154Name = "IMG_20171028_134154";
+	this.IMG_20171028_134154 = null;
+	this.IMG_20171028_134144Description = { files : ["IMG_20171028_134144.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_134144"};
+	this.IMG_20171028_134144Name = "IMG_20171028_134144";
+	this.IMG_20171028_134144 = null;
+	this.IMG_20171028_134103Description = { files : ["IMG_20171028_134103.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_134103"};
+	this.IMG_20171028_134103Name = "IMG_20171028_134103";
+	this.IMG_20171028_134103 = null;
+	this.IMG_20171028_134048Description = { files : ["IMG_20171028_134048.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171028_134048"};
+	this.IMG_20171028_134048Name = "IMG_20171028_134048";
+	this.IMG_20171028_134048 = null;
+	this.IMG_20171029_WA0055Description = { files : ["IMG-20171029-WA0055.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171029_WA0055"};
+	this.IMG_20171029_WA0055Name = "IMG_20171029_WA0055";
+	this.IMG_20171029_WA0055 = null;
+	this.IMG_20171029_WA0030Description = { files : ["IMG-20171029-WA0030.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171029_WA0030"};
+	this.IMG_20171029_WA0030Name = "IMG_20171029_WA0030";
+	this.IMG_20171029_WA0030 = null;
+	this.IMG_20171029_WA0012Description = { files : ["IMG-20171029-WA0012.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171029_WA0012"};
+	this.IMG_20171029_WA0012Name = "IMG_20171029_WA0012";
+	this.IMG_20171029_WA0012 = null;
+	this.IMG_20171029_WA0000Description = { files : ["IMG-20171029-WA0000.jpg"], original_height : 267, type : "image", original_width : 200, name : "IMG_20171029_WA0000"};
+	this.IMG_20171029_WA0000Name = "IMG_20171029_WA0000";
+	this.IMG_20171029_WA0000 = null;
 };
 $hxClasses["kha._Assets.ImageList"] = kha__$Assets_ImageList;
 kha__$Assets_ImageList.__name__ = ["kha","_Assets","ImageList"];
 kha__$Assets_ImageList.prototype = {
-	RoseAndCrown: null
+	IMG_20171029_WA0000: null
+	,IMG_20171029_WA0000Name: null
+	,IMG_20171029_WA0000Description: null
+	,IMG_20171029_WA0000Load: function(done) {
+		kha_Assets.loadImage("IMG_20171029_WA0000",function(image) {
+			done();
+		});
+	}
+	,IMG_20171029_WA0000Unload: function() {
+		this.IMG_20171029_WA0000.unload();
+		this.IMG_20171029_WA0000 = null;
+	}
+	,IMG_20171029_WA0012: null
+	,IMG_20171029_WA0012Name: null
+	,IMG_20171029_WA0012Description: null
+	,IMG_20171029_WA0012Load: function(done) {
+		kha_Assets.loadImage("IMG_20171029_WA0012",function(image) {
+			done();
+		});
+	}
+	,IMG_20171029_WA0012Unload: function() {
+		this.IMG_20171029_WA0012.unload();
+		this.IMG_20171029_WA0012 = null;
+	}
+	,IMG_20171029_WA0030: null
+	,IMG_20171029_WA0030Name: null
+	,IMG_20171029_WA0030Description: null
+	,IMG_20171029_WA0030Load: function(done) {
+		kha_Assets.loadImage("IMG_20171029_WA0030",function(image) {
+			done();
+		});
+	}
+	,IMG_20171029_WA0030Unload: function() {
+		this.IMG_20171029_WA0030.unload();
+		this.IMG_20171029_WA0030 = null;
+	}
+	,IMG_20171029_WA0055: null
+	,IMG_20171029_WA0055Name: null
+	,IMG_20171029_WA0055Description: null
+	,IMG_20171029_WA0055Load: function(done) {
+		kha_Assets.loadImage("IMG_20171029_WA0055",function(image) {
+			done();
+		});
+	}
+	,IMG_20171029_WA0055Unload: function() {
+		this.IMG_20171029_WA0055.unload();
+		this.IMG_20171029_WA0055 = null;
+	}
+	,IMG_20171028_134048: null
+	,IMG_20171028_134048Name: null
+	,IMG_20171028_134048Description: null
+	,IMG_20171028_134048Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_134048",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_134048Unload: function() {
+		this.IMG_20171028_134048.unload();
+		this.IMG_20171028_134048 = null;
+	}
+	,IMG_20171028_134103: null
+	,IMG_20171028_134103Name: null
+	,IMG_20171028_134103Description: null
+	,IMG_20171028_134103Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_134103",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_134103Unload: function() {
+		this.IMG_20171028_134103.unload();
+		this.IMG_20171028_134103 = null;
+	}
+	,IMG_20171028_134144: null
+	,IMG_20171028_134144Name: null
+	,IMG_20171028_134144Description: null
+	,IMG_20171028_134144Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_134144",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_134144Unload: function() {
+		this.IMG_20171028_134144.unload();
+		this.IMG_20171028_134144 = null;
+	}
+	,IMG_20171028_134154: null
+	,IMG_20171028_134154Name: null
+	,IMG_20171028_134154Description: null
+	,IMG_20171028_134154Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_134154",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_134154Unload: function() {
+		this.IMG_20171028_134154.unload();
+		this.IMG_20171028_134154 = null;
+	}
+	,IMG_20171028_135319: null
+	,IMG_20171028_135319Name: null
+	,IMG_20171028_135319Description: null
+	,IMG_20171028_135319Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_135319",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_135319Unload: function() {
+		this.IMG_20171028_135319.unload();
+		this.IMG_20171028_135319 = null;
+	}
+	,IMG_20171028_135432: null
+	,IMG_20171028_135432Name: null
+	,IMG_20171028_135432Description: null
+	,IMG_20171028_135432Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_135432",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_135432Unload: function() {
+		this.IMG_20171028_135432.unload();
+		this.IMG_20171028_135432 = null;
+	}
+	,IMG_20171028_135745: null
+	,IMG_20171028_135745Name: null
+	,IMG_20171028_135745Description: null
+	,IMG_20171028_135745Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_135745",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_135745Unload: function() {
+		this.IMG_20171028_135745.unload();
+		this.IMG_20171028_135745 = null;
+	}
+	,IMG_20171028_140755: null
+	,IMG_20171028_140755Name: null
+	,IMG_20171028_140755Description: null
+	,IMG_20171028_140755Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_140755",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_140755Unload: function() {
+		this.IMG_20171028_140755.unload();
+		this.IMG_20171028_140755 = null;
+	}
+	,IMG_20171028_140904: null
+	,IMG_20171028_140904Name: null
+	,IMG_20171028_140904Description: null
+	,IMG_20171028_140904Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_140904",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_140904Unload: function() {
+		this.IMG_20171028_140904.unload();
+		this.IMG_20171028_140904 = null;
+	}
+	,IMG_20171028_141142: null
+	,IMG_20171028_141142Name: null
+	,IMG_20171028_141142Description: null
+	,IMG_20171028_141142Load: function(done) {
+		kha_Assets.loadImage("IMG_20171028_141142",function(image) {
+			done();
+		});
+	}
+	,IMG_20171028_141142Unload: function() {
+		this.IMG_20171028_141142.unload();
+		this.IMG_20171028_141142 = null;
+	}
+	,RoseAndCrown: null
 	,RoseAndCrownName: null
 	,RoseAndCrownDescription: null
 	,RoseAndCrownLoad: function(done) {
@@ -2921,6 +3477,78 @@ kha__$Assets_ImageList.prototype = {
 	,RoseAndCrownUnload: function() {
 		this.RoseAndCrown.unload();
 		this.RoseAndCrown = null;
+	}
+	,pubInside: null
+	,pubInsideName: null
+	,pubInsideDescription: null
+	,pubInsideLoad: function(done) {
+		kha_Assets.loadImage("pubInside",function(image) {
+			done();
+		});
+	}
+	,pubInsideUnload: function() {
+		this.pubInside.unload();
+		this.pubInside = null;
+	}
+	,pubInsideSmall: null
+	,pubInsideSmallName: null
+	,pubInsideSmallDescription: null
+	,pubInsideSmallLoad: function(done) {
+		kha_Assets.loadImage("pubInsideSmall",function(image) {
+			done();
+		});
+	}
+	,pubInsideSmallUnload: function() {
+		this.pubInsideSmall.unload();
+		this.pubInsideSmall = null;
+	}
+	,pubStairs: null
+	,pubStairsName: null
+	,pubStairsDescription: null
+	,pubStairsLoad: function(done) {
+		kha_Assets.loadImage("pubStairs",function(image) {
+			done();
+		});
+	}
+	,pubStairsUnload: function() {
+		this.pubStairs.unload();
+		this.pubStairs = null;
+	}
+	,pubStairsSmall: null
+	,pubStairsSmallName: null
+	,pubStairsSmallDescription: null
+	,pubStairsSmallLoad: function(done) {
+		kha_Assets.loadImage("pubStairsSmall",function(image) {
+			done();
+		});
+	}
+	,pubStairsSmallUnload: function() {
+		this.pubStairsSmall.unload();
+		this.pubStairsSmall = null;
+	}
+	,upStairs: null
+	,upStairsName: null
+	,upStairsDescription: null
+	,upStairsLoad: function(done) {
+		kha_Assets.loadImage("upStairs",function(image) {
+			done();
+		});
+	}
+	,upStairsUnload: function() {
+		this.upStairs.unload();
+		this.upStairs = null;
+	}
+	,upStairsSmall: null
+	,upStairsSmallName: null
+	,upStairsSmallDescription: null
+	,upStairsSmallLoad: function(done) {
+		kha_Assets.loadImage("upStairsSmall",function(image) {
+			done();
+		});
+	}
+	,upStairsSmallUnload: function() {
+		this.upStairsSmall.unload();
+		this.upStairsSmall = null;
 	}
 	,westCountryHome: null
 	,westCountryHomeName: null
@@ -28475,53 +29103,95 @@ tweenxcore_structure_TimelineSearchResult.prototype = {
 	,__class__: tweenxcore_structure_TimelineSearchResult
 };
 var westCountrySalsa_SceneBuilder = function(director_) {
+	this.deltaX = 0.;
 	this.director = director_;
+	westCountrySalsa_SceneBuilder.regular = kha_Assets.fonts.Arimo_Regular;
+	westCountrySalsa_SceneBuilder.bold = kha_Assets.fonts.Arimo_Bold;
 	this.director.enableKeyControl();
+	this.director.enableMouseInteraction();
 };
 $hxClasses["westCountrySalsa.SceneBuilder"] = westCountrySalsa_SceneBuilder;
 westCountrySalsa_SceneBuilder.__name__ = ["westCountrySalsa","SceneBuilder"];
+westCountrySalsa_SceneBuilder.addContact = function(scene,col0) {
+	var px = 684;
+	var py = 671;
+	var dy = 23;
+	var middle1 = 21;
+	var tx = new kScenes_TextWrapper("contact:",westCountrySalsa_SceneBuilder.bold,col0,middle1,2,px,py);
+	tx.offSide = kScenes_Compass.NORTH_EAST_SMALL;
+	scene.addText(tx);
+	py += dy;
+	tx = new kScenes_TextWrapper("westcountrysalsa@gmail.com",westCountrySalsa_SceneBuilder.bold,col0,middle1,2,px,py);
+	tx.offSide = kScenes_Compass.EAST_SMALL;
+	scene.addText(tx);
+};
+westCountrySalsa_SceneBuilder.addRoseAndCrownAddress = function(scene,col0,col1) {
+	var py = 608;
+	var dy = 37;
+	var px = 27;
+	var tx = new kScenes_TextWrapper("Rose & Crown, Public House",westCountrySalsa_SceneBuilder.regular,col0,38,2,px,py,false);
+	tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
+	scene.addText(tx);
+	py += dy + 2;
+	var txArr = [];
+	var address = ["Hinton Charterhouse","BATH","BA2 7SN"];
+	var _g1 = 0;
+	var _g = address.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		tx = new kScenes_TextWrapper(address[i],westCountrySalsa_SceneBuilder.regular,col1,33,2,px,py,false);
+		txArr[txArr.length] = tx;
+		py += dy;
+	}
+	var multiTx = new kScenes_MultiTextImage(txArr);
+	multiTx.offSide = kScenes_Compass.WEST_SMALL;
+	scene.addImage(multiTx);
+};
 westCountrySalsa_SceneBuilder.addCopyRight = function(scene,col0) {
-	var py = 733;
-	var px = 785;
-	var tx = new kScenes_TextWrapper("© 2017 West Country Salsa",kha_Assets.fonts.Arimo_Bold,col0,17,1,px,py);
+	var py = 737;
+	var px = 769;
+	var tx = new kScenes_TextWrapper("© 2017 West Country Salsa",westCountrySalsa_SceneBuilder.bold,col0,17,1,px,py);
 	tx.offSide = kScenes_Compass.SOUTH;
 	scene.addText(tx);
 };
 westCountrySalsa_SceneBuilder.addTitle = function(scene,col0,col1) {
-	var tx = new kScenes_TextWrapper("West Country",kha_Assets.fonts.Arimo_Regular,col0,89,2,27,14,false);
+	var tx = new kScenes_TextWrapper("West Country",westCountrySalsa_SceneBuilder.regular,col0,89,2,27,14,false);
 	scene.addText(tx);
-	tx = new kScenes_TextWrapper("SALSA",kha_Assets.fonts.Arimo_Bold,col1,112,-3.,343,100,false);
+	tx = new kScenes_TextWrapper("SALSA",westCountrySalsa_SceneBuilder.bold,col1,112,-3.,343,100,false);
 	tx.hasMatrix = true;
 	scene.addText(tx);
 };
-westCountrySalsa_SceneBuilder.addMenu = function(scene) {
-	var tx;
-	var px = 855;
+westCountrySalsa_SceneBuilder.addMenu = function(scene,id,colSelect,col0,col1) {
+	var tx0;
+	var tx1;
+	var px0 = 856;
+	var px1 = px0 + 137 - 1;
 	var py = 22;
 	var dy = 42;
-	var white = 1526726655;
-	var black = 1711276032;
 	var txArr = [];
-	tx = new kScenes_TextWrapper("location",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
-	txArr[txArr.length] = tx;
-	py += dy;
-	tx = new kScenes_TextWrapper("teachers",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
-	txArr[txArr.length] = tx;
-	py += dy;
-	tx = new kScenes_TextWrapper("contact",kha_Assets.fonts.Arimo_Regular,black,38,-1.6,px,py,false);
-	txArr[txArr.length] = tx;
-	px = 992;
-	py = 22;
-	dy = 42;
-	white = 1728053247;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
-	txArr[txArr.length] = tx;
-	py += dy;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
-	txArr[txArr.length] = tx;
-	py += dy;
-	tx = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,black,40,null,px,py,false);
-	txArr[txArr.length] = tx;
+	var rw;
+	var buttonNames = ["home","location","teachers","pictures"];
+	var count = 0;
+	var _g = 0;
+	while(_g < buttonNames.length) {
+		var name = buttonNames[_g];
+		++_g;
+		if(count == id) {
+			tx0 = new kScenes_TextWrapper(name,kha_Assets.fonts.Arimo_Regular,colSelect,38,-1.6,px0,py,false);
+			txArr[txArr.length] = tx0;
+			rw = new kScenes_RectangleWrapper(tx0.width + 4,tx0.height + 4,-1,westCountrySalsa_SceneBuilder.red1,0.,px0 - 2,py - 2);
+		} else {
+			tx0 = new kScenes_TextWrapper(name,kha_Assets.fonts.Arimo_Regular,col0,38,-1.6,px0,py,false);
+			txArr[txArr.length] = tx0;
+			tx1 = new kScenes_TextWrapper(">",kha_Assets.fonts.Arimo_Bold,col1,40,null,px1,py,false);
+			txArr[txArr.length] = tx1;
+			rw = new kScenes_RectangleWrapper(tx1.x + tx1.width - px0 + 4,tx0.height + 4,-1,westCountrySalsa_SceneBuilder.red1,0.,px0 - 2,py - 2);
+		}
+		++count;
+		rw.hitable = true;
+		scene.addHit(rw);
+		py += dy;
+	}
 	var multiTx = new kScenes_MultiTextImage(txArr);
 	multiTx.offSide = kScenes_Compass.EAST;
 	scene.addImage(multiTx);
@@ -28534,6 +29204,8 @@ westCountrySalsa_SceneBuilder.prototype = {
 	,home: function() {
 		var scene = new kScenes_Scene("home");
 		scene.addImage(new kScenes_ImageWrapper(kha_Assets.images.westCountryHome));
+		var rect = new kScenes_RectangleWrapper(1024,768,-1,-792297453,4.,0,0);
+		scene.addBackRectangle(rect);
 		var black = -301989888;
 		var white = -788529153;
 		var bottomTextHeader = 33;
@@ -28541,103 +29213,205 @@ westCountrySalsa_SceneBuilder.prototype = {
 		var py = 609;
 		var dy = 33;
 		var px = 27;
-		var tx = new kScenes_TextWrapper("Classes",kha_Assets.fonts.Arimo_Regular,westCountrySalsa_SceneBuilder.red1,bottomTextHeader,2,px,py);
+		var tx = new kScenes_TextWrapper("Classes",westCountrySalsa_SceneBuilder.regular,westCountrySalsa_SceneBuilder.red1,bottomTextHeader,2,px,py);
 		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx);
-		py += dy + 17 - 2;
+		py += dy + 15;
 		var txArr = [];
-		tx = new kScenes_TextWrapper("Salsa classes starting Thursday 16th November",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,px,py,false);
-		txArr[txArr.length] = tx;
-		py += dy;
-		tx = new kScenes_TextWrapper("Beginners from 7.30pm, social dancing till late.",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py,false);
-		txArr[txArr.length] = tx;
-		py += dy;
-		tx = new kScenes_TextWrapper("At the Rose & Crown, BA2 7SN",kha_Assets.fonts.Arimo_Regular,black,bottomTextBody,2,27,py,false);
-		txArr[txArr.length] = tx;
+		var info = ["Salsa classes starting Thursday 16th November","Beginners from 7.30pm, social dancing till late.","At the Rose & Crown, BA2 7SN"];
+		var _g1 = 0;
+		var _g = info.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			tx = new kScenes_TextWrapper(info[i],westCountrySalsa_SceneBuilder.regular,black,bottomTextBody,2,px,py,false);
+			txArr[txArr.length] = tx;
+			py += dy;
+		}
 		var multiTx = new kScenes_MultiTextImage(txArr);
 		multiTx.offSide = kScenes_Compass.WEST_SMALL;
 		scene.addImage(multiTx);
 		py = 357;
-		dy = 22;
+		dy = 23;
 		px = 27;
 		var middle0 = 18;
 		var middle1 = 21;
-		var dull = -2147483648;
-		var tx1 = new kScenes_TextWrapper("beginners salsa lessons in:",kha_Assets.fonts.Arimo_Bold,dull,middle0,1,px,py);
+		var tx1 = new kScenes_TextWrapper("beginners salsa lessons in:",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle0,1,px,py);
 		tx1.offSide = kScenes_Compass.NORTH_SMALL;
 		scene.addText(tx1);
-		py += dy + 1;
-		var tx2 = new kScenes_TextWrapper("Cross Body, Cuban, Cali",kha_Assets.fonts.Arimo_Bold,dull,middle1,2,px,py);
+		py += dy;
+		var tx2 = new kScenes_TextWrapper("Cross Body, Cuban, Cali",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx2);
-		py += dy + 20 - 10;
-		tx2 = new kScenes_TextWrapper("social music:",kha_Assets.fonts.Arimo_Bold,dull,middle0,1,px,py);
+		py += dy + 9;
+		tx2 = new kScenes_TextWrapper("social music:",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle0,1,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_SMALL;
 		scene.addText(tx2);
-		py += dy + 1;
-		tx2 = new kScenes_TextWrapper("Salsa, Bachata, Forro",kha_Assets.fonts.Arimo_Bold,dull,middle1,2,px,py);
+		py += dy;
+		tx2 = new kScenes_TextWrapper("Salsa, Bachata, Forro",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
-		scene.addText(tx2);
-		py += dy + 1;
-		tx2 = new kScenes_TextWrapper("Cumbia, Kizomba",kha_Assets.fonts.Arimo_Bold,dull,middle1,2,px,py);
-		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
-		scene.addText(tx2);
-		var white1 = -1711276033;
-		px = 684;
-		py = 671;
-		tx2 = new kScenes_TextWrapper("contact:",kha_Assets.fonts.Arimo_Bold,dull,middle1,2,px,py);
-		tx2.offSide = kScenes_Compass.NORTH_EAST_SMALL;
 		scene.addText(tx2);
 		py += dy;
-		tx2 = new kScenes_TextWrapper("westcountrysalsa@gmail.com",kha_Assets.fonts.Arimo_Bold,dull,middle1,2,px,py);
-		tx2.offSide = kScenes_Compass.EAST_SMALL;
+		tx2 = new kScenes_TextWrapper("Cumbia, Kizomba",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
+		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx2);
+		westCountrySalsa_SceneBuilder.addContact(scene,westCountrySalsa_SceneBuilder.dull);
 		westCountrySalsa_SceneBuilder.addTitle(scene,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.red2);
-		westCountrySalsa_SceneBuilder.addMenu(scene);
+		westCountrySalsa_SceneBuilder.addMenu(scene,0,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.black0,westCountrySalsa_SceneBuilder.black0);
 		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red3);
 		this.add(scene);
 		return scene;
 	}
 	,venue: function() {
 		var scene = new kScenes_Scene("venue");
-		var img = new kScenes_ImageWrapper(kha_Assets.images.RoseAndCrown,600,250);
+		var borderWid = 1.;
+		var px = 600.;
+		var py = 250.;
+		var img = new kScenes_ImageWrapper(kha_Assets.images.RoseAndCrown,px,py);
+		scene.addImage(img);
+		var rect = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,-803335218,4.,px - borderWid,py - borderWid);
+		rect.offSide = kScenes_Compass.EAST_SMALL;
+		scene.addBackRectangle(rect);
 		img.offSide = kScenes_Compass.EAST_SMALL;
+		px = 67.5;
+		py = 195.;
+		var dy = 100.;
+		var dx = 250.;
+		img = new kScenes_ImageWrapper(kha_Assets.images.pubStairsSmall,px,py);
+		img.offSide = kScenes_Compass.NORTH_WEST_SMALL;
+		rect = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,westCountrySalsa_SceneBuilder.red2,3.,px - borderWid,py - borderWid);
+		rect.offSide = kScenes_Compass.NORTH_WEST_SMALL;
+		scene.addBackRectangle(rect);
+		scene.addImage(img);
+		py += dy;
+		img = new kScenes_ImageWrapper(kha_Assets.images.upStairsSmall,px + dx,py);
+		img.offSide = kScenes_Compass.NORTH_EAST_SMALL;
+		var rect1 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,westCountrySalsa_SceneBuilder.red2,3.,px + dx - borderWid,py - borderWid);
+		rect1.offSide = kScenes_Compass.NORTH_EAST_SMALL;
+		scene.addBackRectangle(rect1);
+		scene.addImage(img);
+		py += dy;
+		img = new kScenes_ImageWrapper(kha_Assets.images.pubInsideSmall,px,py);
+		img.offSide = kScenes_Compass.SOUTH_WEST_SMALL;
+		var rect2 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,westCountrySalsa_SceneBuilder.red2,3.,px - borderWid,py - borderWid);
+		rect2.offSide = kScenes_Compass.SOUTH_WEST_SMALL;
+		scene.addBackRectangle(rect2);
 		scene.addImage(img);
 		westCountrySalsa_SceneBuilder.addTitle(scene,-1,-1);
-		var py = 608.6;
-		var dy = 37;
-		var px = 27.6;
-		var white = -788529153;
-		var black = -637534208;
-		var txArr = [];
-		py = 608;
-		dy = 37;
-		px = 27;
-		var tx = new kScenes_TextWrapper("Rose & Crown, Public House",kha_Assets.fonts.Arimo_Regular,-1,38,2,px,py,false);
-		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
-		scene.addText(tx);
-		py += dy + 2;
-		tx = new kScenes_TextWrapper("Hinton Charterhouse",kha_Assets.fonts.Arimo_Regular,white,33,2,px,py,false);
-		txArr[txArr.length] = tx;
-		py += dy;
-		tx = new kScenes_TextWrapper("BATH",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py,false);
-		txArr[txArr.length] = tx;
-		py += dy;
-		tx = new kScenes_TextWrapper("BA2 7SN",kha_Assets.fonts.Arimo_Regular,white,33,2,27,py,false);
-		txArr[txArr.length] = tx;
-		var multiTx = new kScenes_MultiTextImage(txArr);
-		multiTx.offSide = kScenes_Compass.WEST_SMALL;
-		scene.addImage(multiTx);
+		westCountrySalsa_SceneBuilder.addRoseAndCrownAddress(scene,-1,westCountrySalsa_SceneBuilder.white3);
+		westCountrySalsa_SceneBuilder.addMenu(scene,1,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.white0,westCountrySalsa_SceneBuilder.white1);
 		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red3);
 		this.add(scene);
 		return scene;
 	}
 	,teachers: function() {
+		var black = -805306368;
 		var scene = new kScenes_Scene("Teachers");
 		scene.addImage(new kScenes_ImageWrapper(kha_Assets.images.westCountrySalsaPlain));
+		var rect = new kScenes_RectangleWrapper(1024,768,-1,856935966,4.,0,0);
+		scene.addBackRectangle(rect);
+		var py = 400.;
+		var px = 27.;
+		var tx = new kScenes_TextWrapper("Cristina",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.red1,38,2,px,py);
+		tx.offSide = kScenes_Compass.SOUTH_WEST_SMALL;
+		scene.addText(tx);
+		px += tx.width;
+		var tx1 = new kScenes_TextWrapper(" + ",westCountrySalsa_SceneBuilder.bold,black,40,2,px,py);
+		scene.addText(tx1);
+		px += tx1.width - 6;
+		var tx2 = new kScenes_TextWrapper("Justin",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.red2,38,2,px,py);
+		tx2.offSide = kScenes_Compass.NORTH_EAST_SMALL;
+		scene.addText(tx2);
 		this.add(scene);
+		westCountrySalsa_SceneBuilder.addMenu(scene,2,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.black0,westCountrySalsa_SceneBuilder.black0);
 		westCountrySalsa_SceneBuilder.addTitle(scene,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.red2);
+		westCountrySalsa_SceneBuilder.addCopyRight(scene,black);
 		return scene;
+	}
+	,contact: function() {
+		var scene = new kScenes_Scene("Contact");
+		scene.addImage(new kScenes_ImageWrapper(kha_Assets.images.westCountrySalsaPlain));
+		var rect = new kScenes_RectangleWrapper(1024,768,-1,1726878670,4.,0,0);
+		scene.addBackRectangle(rect);
+		this.add(scene);
+		westCountrySalsa_SceneBuilder.addMenu(scene,3,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.black0,westCountrySalsa_SceneBuilder.black0);
+		westCountrySalsa_SceneBuilder.addTitle(scene,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.red2);
+		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red3);
+		return scene;
+	}
+	,pictures: function() {
+		var scene = new kScenes_Scene("Pictures");
+		var rect = new kScenes_RectangleWrapper(1024,768,-1,1713247182,0.,0,0);
+		scene.addBackRectangle(rect);
+		var rect1 = new kScenes_RectangleWrapper(1024,768,-1,-16777216,0.,0,0);
+		scene.addBackRectangle(rect1);
+		var imgs = [kha_Assets.images.IMG_20171028_134048,kha_Assets.images.IMG_20171028_134103,kha_Assets.images.IMG_20171028_134144,kha_Assets.images.IMG_20171028_134154,kha_Assets.images.IMG_20171028_135319,kha_Assets.images.IMG_20171028_135432,kha_Assets.images.IMG_20171028_135745,kha_Assets.images.IMG_20171028_140755,kha_Assets.images.IMG_20171028_140904,kha_Assets.images.IMG_20171028_141142,kha_Assets.images.IMG_20171029_WA0000,kha_Assets.images.IMG_20171029_WA0012,kha_Assets.images.IMG_20171029_WA0030,kha_Assets.images.IMG_20171029_WA0055];
+		var cols = [westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453];
+		var img;
+		var px = 27.;
+		var py = 300.;
+		var dx = 20.;
+		var borderWid = 1.;
+		var imgWraps = [];
+		var tempScene = new kScenes_Scene("images");
+		var tempScene2 = new kScenes_Scene("bg");
+		var _g1 = 0;
+		var _g = imgs.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			img = new kScenes_ImageWrapper(imgs[i],px + dx,py);
+			img.alpha = 1.;
+			var rect2 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,cols[i],3.,px + dx - borderWid,py - borderWid);
+			rect2.alpha = 1.;
+			tempScene2.addBackRectangle(rect2);
+			tempScene.addImage(img);
+			imgWraps[imgWraps.length] = img;
+			px += dx + img.width;
+		}
+		var _g11 = 0;
+		var _g2 = imgs.length;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			img = new kScenes_ImageWrapper(imgs[i1],px + dx,py);
+			img.alpha = 1.;
+			var rect3 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,cols[i1],3.,px + dx - borderWid,py - borderWid);
+			rect3.alpha = 1.;
+			tempScene2.addBackRectangle(rect3);
+			tempScene.addImage(img);
+			imgWraps[imgWraps.length] = img;
+			px += dx + img.width;
+		}
+		var wideImage = tempScene.renderToImage();
+		var wideImageBg = tempScene2.renderToImage();
+		this.scrollImageWrapper = new kScenes_ImageWrapper(wideImage,0,0);
+		this.scrollRectWrapper = new kScenes_ImageWrapper(wideImageBg,0,0);
+		scene.addImage(this.scrollRectWrapper);
+		scene.addImage(this.scrollImageWrapper);
+		westCountrySalsa_SceneBuilder.addTitle(scene,-1,-1);
+		westCountrySalsa_SceneBuilder.addMenu(scene,3,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.white0,westCountrySalsa_SceneBuilder.white1);
+		westCountrySalsa_SceneBuilder.addCopyRight(scene,-1);
+		this.add(scene);
+		return scene;
+	}
+	,scrollRectWrapper: null
+	,scrollImageWrapper: null
+	,deltaX: null
+	,updateScroller: function() {
+		var imgWrap = this.scrollImageWrapper;
+		if(imgWrap.alpha == 1.) {
+			var rectWrap = this.scrollRectWrapper;
+			var step = -2.;
+			var newPos = this.deltaX += step;
+			imgWrap.x = newPos;
+			rectWrap.x = newPos;
+			if(imgWrap.x < -imgWrap.width / 2) {
+				this.deltaX = imgWrap.width + imgWrap.x - step;
+				newPos = this.deltaX;
+				imgWrap.x = newPos;
+				rectWrap.x = newPos;
+			}
+		} else {
+			this.deltaX = 0.;
+		}
 	}
 	,__class__: westCountrySalsa_SceneBuilder
 };
@@ -29168,5 +29942,10 @@ tweenx909_TweenX.idCounter = 0;
 westCountrySalsa_SceneBuilder.red1 = -289006061;
 westCountrySalsa_SceneBuilder.red3 = -1429856749;
 westCountrySalsa_SceneBuilder.red2 = -287558866;
+westCountrySalsa_SceneBuilder.white0 = 1526726655;
+westCountrySalsa_SceneBuilder.white1 = 1728053247;
+westCountrySalsa_SceneBuilder.white3 = -788529153;
+westCountrySalsa_SceneBuilder.black0 = 1711276032;
+westCountrySalsa_SceneBuilder.dull = -2147483648;
 Main.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
