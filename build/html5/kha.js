@@ -5306,20 +5306,20 @@ kha_Shaders.init = function() {
 	var _g3 = 0;
 	while(_g3 < 3) {
 		var i3 = _g3++;
-		var data3 = Reflect.field(kha_Shaders,"painter_image_vertData" + i3);
+		var data3 = Reflect.field(kha_Shaders,"painter_text_fragData" + i3);
 		var bytes3 = haxe_Unserializer.run(data3);
 		blobs3.push(kha_internal_BytesBlob.fromBytes(bytes3));
 	}
-	kha_Shaders.painter_image_vert = new kha_graphics4_VertexShader(blobs3,["painter-image.vert.essl","painter-image-relaxed.vert.essl","painter-image-webgl2.vert.essl"]);
+	kha_Shaders.painter_text_frag = new kha_graphics4_FragmentShader(blobs3,["painter-text.frag.essl","painter-text-relaxed.frag.essl","painter-text-webgl2.frag.essl"]);
 	var blobs4 = [];
 	var _g4 = 0;
 	while(_g4 < 3) {
 		var i4 = _g4++;
-		var data4 = Reflect.field(kha_Shaders,"painter_text_fragData" + i4);
+		var data4 = Reflect.field(kha_Shaders,"painter_image_vertData" + i4);
 		var bytes4 = haxe_Unserializer.run(data4);
 		blobs4.push(kha_internal_BytesBlob.fromBytes(bytes4));
 	}
-	kha_Shaders.painter_text_frag = new kha_graphics4_FragmentShader(blobs4,["painter-text.frag.essl","painter-text-relaxed.frag.essl","painter-text-webgl2.frag.essl"]);
+	kha_Shaders.painter_image_vert = new kha_graphics4_VertexShader(blobs4,["painter-image.vert.essl","painter-image-relaxed.vert.essl","painter-image-webgl2.vert.essl"]);
 	var blobs5 = [];
 	var _g5 = 0;
 	while(_g5 < 3) {
@@ -29117,11 +29117,11 @@ westCountrySalsa_SceneBuilder.addContact = function(scene,col0) {
 	var py = 671;
 	var dy = 23;
 	var middle1 = 21;
-	var tx = new kScenes_TextWrapper("contact:",westCountrySalsa_SceneBuilder.bold,col0,middle1,2,px,py);
+	var tx = new kScenes_TextWrapper("contact:",westCountrySalsa_SceneBuilder.regular,col0,middle1,2,px,py);
 	tx.offSide = kScenes_Compass.NORTH_EAST_SMALL;
 	scene.addText(tx);
 	py += dy;
-	tx = new kScenes_TextWrapper("westcountrysalsa@gmail.com",westCountrySalsa_SceneBuilder.bold,col0,middle1,2,px,py);
+	tx = new kScenes_TextWrapper("westcountrysalsa@gmail.com",westCountrySalsa_SceneBuilder.regular,col0,middle1,2,px,py);
 	tx.offSide = kScenes_Compass.EAST_SMALL;
 	scene.addText(tx);
 };
@@ -29213,12 +29213,15 @@ westCountrySalsa_SceneBuilder.prototype = {
 		var py = 609;
 		var dy = 33;
 		var px = 27;
-		var tx = new kScenes_TextWrapper("Classes",westCountrySalsa_SceneBuilder.regular,westCountrySalsa_SceneBuilder.red1,bottomTextHeader,2,px,py);
+		var tx = new kScenes_TextWrapper("Salsa class and/or social only £5",westCountrySalsa_SceneBuilder.regular,westCountrySalsa_SceneBuilder.red1,bottomTextHeader - 4,2,px,py + 2);
 		tx.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx);
+		var rect1 = new kScenes_RectangleWrapper(tx.width + 33,tx.height + 3,null,-1610612736,0.,0,py + 2);
+		rect1.offSide = kScenes_Compass.NORTH_WEST_SMALL;
+		scene.addFrontRectangle(rect1);
 		py += dy + 15;
 		var txArr = [];
-		var info = ["Salsa classes starting Thursday 16th November","Beginners from 7.30pm, social dancing till late.","At the Rose & Crown, BA2 7SN"];
+		var info = ["Salsa class are starting on Thursday 16th November","Beginners from 7.30pm. Social dancing 8.30 - 11.00","At the Rose & Crown, Near Bath, BA2 7SN"];
 		var _g1 = 0;
 		var _g = info.length;
 		while(_g1 < _g) {
@@ -29235,29 +29238,30 @@ westCountrySalsa_SceneBuilder.prototype = {
 		px = 27;
 		var middle0 = 18;
 		var middle1 = 21;
-		var tx1 = new kScenes_TextWrapper("beginners salsa lessons in:",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle0,1,px,py);
+		var middleBlack = -805306368;
+		var tx1 = new kScenes_TextWrapper("beginners salsa lesson in:",westCountrySalsa_SceneBuilder.bold,middleBlack,middle0,1,px,py);
 		tx1.offSide = kScenes_Compass.NORTH_SMALL;
 		scene.addText(tx1);
 		py += dy;
-		var tx2 = new kScenes_TextWrapper("Cross Body, Cuban, Cali",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
+		var tx2 = new kScenes_TextWrapper("Cross Body, Cuban, Cali",westCountrySalsa_SceneBuilder.bold,middleBlack,middle1,2,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx2);
 		py += dy + 9;
-		tx2 = new kScenes_TextWrapper("social music:",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle0,1,px,py);
+		tx2 = new kScenes_TextWrapper("social music:",westCountrySalsa_SceneBuilder.bold,middleBlack,middle0,1,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_SMALL;
 		scene.addText(tx2);
 		py += dy;
-		tx2 = new kScenes_TextWrapper("Salsa, Bachata, Forro",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
+		tx2 = new kScenes_TextWrapper("Salsa, Bachata, Forro",westCountrySalsa_SceneBuilder.bold,middleBlack,middle1,2,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx2);
 		py += dy;
-		tx2 = new kScenes_TextWrapper("Cumbia, Kizomba",westCountrySalsa_SceneBuilder.bold,westCountrySalsa_SceneBuilder.dull,middle1,2,px,py);
+		tx2 = new kScenes_TextWrapper("Cumbia, Kizomba",westCountrySalsa_SceneBuilder.bold,middleBlack,middle1,2,px,py);
 		tx2.offSide = kScenes_Compass.NORTH_WEST_SMALL;
 		scene.addText(tx2);
-		westCountrySalsa_SceneBuilder.addContact(scene,westCountrySalsa_SceneBuilder.dull);
+		westCountrySalsa_SceneBuilder.addContact(scene,-100663296);
 		westCountrySalsa_SceneBuilder.addTitle(scene,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.red2);
-		westCountrySalsa_SceneBuilder.addMenu(scene,0,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.black0,westCountrySalsa_SceneBuilder.black0);
-		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red3);
+		westCountrySalsa_SceneBuilder.addMenu(scene,0,westCountrySalsa_SceneBuilder.red1,-872415232,-872415232);
+		westCountrySalsa_SceneBuilder.addCopyRight(scene,westCountrySalsa_SceneBuilder.red1);
 		this.add(scene);
 		return scene;
 	}
@@ -29322,7 +29326,7 @@ westCountrySalsa_SceneBuilder.prototype = {
 		tx2.offSide = kScenes_Compass.NORTH_EAST_SMALL;
 		scene.addText(tx2);
 		this.add(scene);
-		westCountrySalsa_SceneBuilder.addMenu(scene,2,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.black0,westCountrySalsa_SceneBuilder.black0);
+		westCountrySalsa_SceneBuilder.addMenu(scene,2,westCountrySalsa_SceneBuilder.red1,-872415232,-872415232);
 		westCountrySalsa_SceneBuilder.addTitle(scene,westCountrySalsa_SceneBuilder.red1,westCountrySalsa_SceneBuilder.red2);
 		westCountrySalsa_SceneBuilder.addCopyRight(scene,black);
 		return scene;
@@ -29344,7 +29348,7 @@ westCountrySalsa_SceneBuilder.prototype = {
 		scene.addBackRectangle(rect);
 		var rect1 = new kScenes_RectangleWrapper(1024,768,-1,-16777216,0.,0,0);
 		scene.addBackRectangle(rect1);
-		var imgs = [kha_Assets.images.IMG_20171028_134048,kha_Assets.images.IMG_20171028_134103,kha_Assets.images.IMG_20171028_134144,kha_Assets.images.IMG_20171028_134154,kha_Assets.images.IMG_20171028_135319,kha_Assets.images.IMG_20171028_135432,kha_Assets.images.IMG_20171028_135745,kha_Assets.images.IMG_20171028_140755,kha_Assets.images.IMG_20171028_140904,kha_Assets.images.IMG_20171028_141142,kha_Assets.images.IMG_20171029_WA0000,kha_Assets.images.IMG_20171029_WA0012,kha_Assets.images.IMG_20171029_WA0030,kha_Assets.images.IMG_20171029_WA0055];
+		var imgs = [kha_Assets.images.IMG_20171028_134048,kha_Assets.images.IMG_20171028_135319,kha_Assets.images.IMG_20171028_140755,kha_Assets.images.IMG_20171028_134103,kha_Assets.images.IMG_20171028_135432,kha_Assets.images.IMG_20171028_140904,kha_Assets.images.IMG_20171028_134144,kha_Assets.images.IMG_20171028_135745,kha_Assets.images.IMG_20171028_141142,kha_Assets.images.IMG_20171029_WA0030,kha_Assets.images.IMG_20171028_134154,kha_Assets.images.IMG_20171029_WA0000,kha_Assets.images.IMG_20171029_WA0012,kha_Assets.images.IMG_20171029_WA0055];
 		var cols = [westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453,westCountrySalsa_SceneBuilder.red2,-803335218,1726878670,-792297453];
 		var img;
 		var px = 27.;
@@ -29367,13 +29371,14 @@ westCountrySalsa_SceneBuilder.prototype = {
 			imgWraps[imgWraps.length] = img;
 			px += dx + img.width;
 		}
+		var i1;
 		var _g11 = 0;
 		var _g2 = imgs.length;
 		while(_g11 < _g2) {
-			var i1 = _g11++;
-			img = new kScenes_ImageWrapper(imgs[i1],px + dx,py);
+			var i2 = _g11++;
+			img = new kScenes_ImageWrapper(imgs[i2],px + dx,py);
 			img.alpha = 1.;
-			var rect3 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,cols[i1],3.,px + dx - borderWid,py - borderWid);
+			var rect3 = new kScenes_RectangleWrapper(img.width + borderWid * 2,img.height + borderWid * 2,-1,cols[i2],3.,px + dx - borderWid,py - borderWid);
 			rect3.alpha = 1.;
 			tempScene2.addBackRectangle(rect3);
 			tempScene.addImage(img);
@@ -29397,17 +29402,20 @@ westCountrySalsa_SceneBuilder.prototype = {
 	,deltaX: null
 	,updateScroller: function() {
 		var imgWrap = this.scrollImageWrapper;
+		var step = -3.;
+		var border = 2;
+		var gap = 20;
+		var totWid = 1024;
 		if(imgWrap.alpha == 1.) {
 			var rectWrap = this.scrollRectWrapper;
-			var step = -2.;
-			var newPos = this.deltaX += step;
-			imgWrap.x = newPos;
-			rectWrap.x = newPos;
-			if(imgWrap.x < -imgWrap.width / 2) {
-				this.deltaX = imgWrap.width + imgWrap.x - step;
-				newPos = this.deltaX;
-				imgWrap.x = newPos;
-				rectWrap.x = newPos;
+			if(imgWrap.x + imgWrap.width + gap / 2 < totWid) {
+				this.deltaX += (imgWrap.width - gap) / 2 - gap / 2 + border;
+				imgWrap.x = this.deltaX;
+				rectWrap.x = this.deltaX;
+			} else {
+				this.deltaX += step;
+				imgWrap.x = this.deltaX;
+				rectWrap.x = this.deltaX;
 			}
 		} else {
 			this.deltaX = 0.;
@@ -29521,12 +29529,12 @@ kha_Shaders.painter_colored_vertData2 = "s354:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG
 kha_Shaders.painter_image_fragData0 = "s471:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWMyIHRleENvb3JkOwp2YXJ5aW5nIGhpZ2hwIHZlYzQgY29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBoaWdocCB2ZWM0IHRleGNvbG9yID0gdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICBoaWdocCB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBnbF9GcmFnRGF0YVswXSA9IHRleGNvbG9yOwp9Cgo";
 kha_Shaders.painter_image_fragData1 = "s444:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjMiB0ZXhDb29yZDsKdmFyeWluZyB2ZWM0IGNvbG9yOwoKdm9pZCBtYWluKCkKewogICAgdmVjNCB0ZXhjb2xvciA9IHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKSAqIGNvbG9yOwogICAgdmVjMyBfMzIgPSB0ZXhjb2xvci54eXogKiBjb2xvci53OwogICAgdGV4Y29sb3IgPSB2ZWM0KF8zMi54LCBfMzIueSwgXzMyLnosIHRleGNvbG9yLncpOwogICAgZ2xfRnJhZ0RhdGFbMF0gPSB0ZXhjb2xvcjsKfQoK";
 kha_Shaders.painter_image_fragData2 = "s452:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCmluIHZlYzIgdGV4Q29vcmQ7CmluIHZlYzQgY29sb3I7Cm91dCB2ZWM0IEZyYWdDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIHZlYzQgdGV4Y29sb3IgPSB0ZXh0dXJlKHRleCwgdGV4Q29vcmQpICogY29sb3I7CiAgICB2ZWMzIF8zMiA9IHRleGNvbG9yLnh5eiAqIGNvbG9yLnc7CiAgICB0ZXhjb2xvciA9IHZlYzQoXzMyLngsIF8zMi55LCBfMzIueiwgdGV4Y29sb3Iudyk7CiAgICBGcmFnQ29sb3IgPSB0ZXhjb2xvcjsKfQoK";
-kha_Shaders.painter_image_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_image_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
-kha_Shaders.painter_image_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_Shaders.painter_text_fragData0 = "s351:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gaGlnaHAgaW50OwoKdW5pZm9ybSBoaWdocCBzYW1wbGVyMkQgdGV4OwoKdmFyeWluZyBoaWdocCB2ZWM0IGZyYWdtZW50Q29sb3I7CnZhcnlpbmcgaGlnaHAgdmVjMiB0ZXhDb29yZDsKCnZvaWQgbWFpbigpCnsKICAgIGdsX0ZyYWdEYXRhWzBdID0gdmVjNChmcmFnbWVudENvbG9yLnh5eiwgdGV4dHVyZTJEKHRleCwgdGV4Q29vcmQpLnggKiBmcmFnbWVudENvbG9yLncpOwp9Cgo";
 kha_Shaders.painter_text_fragData1 = "s340:I3ZlcnNpb24gMTAwCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCnZhcnlpbmcgdmVjNCBmcmFnbWVudENvbG9yOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9GcmFnRGF0YVswXSA9IHZlYzQoZnJhZ21lbnRDb2xvci54eXosIHRleHR1cmUyRCh0ZXgsIHRleENvb3JkKS54ICogZnJhZ21lbnRDb2xvci53KTsKfQoK";
 kha_Shaders.painter_text_fragData2 = "s348:I3ZlcnNpb24gMzAwIGVzCnByZWNpc2lvbiBtZWRpdW1wIGZsb2F0OwpwcmVjaXNpb24gbWVkaXVtcCBpbnQ7Cgp1bmlmb3JtIG1lZGl1bXAgc2FtcGxlcjJEIHRleDsKCm91dCB2ZWM0IEZyYWdDb2xvcjsKaW4gdmVjNCBmcmFnbWVudENvbG9yOwppbiB2ZWMyIHRleENvb3JkOwoKdm9pZCBtYWluKCkKewogICAgRnJhZ0NvbG9yID0gdmVjNChmcmFnbWVudENvbG9yLnh5eiwgdGV4dHVyZSh0ZXgsIHRleENvb3JkKS54ICogZnJhZ21lbnRDb2xvci53KTsKfQoK";
+kha_Shaders.painter_image_vertData0 = "s415:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgY29sb3I7CmF0dHJpYnV0ZSB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
+kha_Shaders.painter_image_vertData1 = "s479:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGNvbG9yOwphdHRyaWJ1dGUgbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBjb2xvciA9IHZlcnRleENvbG9yOwp9Cgo";
+kha_Shaders.painter_image_vertData2 = "s444:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgY29sb3I7CmluIG1lZGl1bXAgdmVjNCB2ZXJ0ZXhDb2xvcjsKCnZvaWQgbWFpbigpCnsKICAgIGdsX1Bvc2l0aW9uID0gcHJvamVjdGlvbk1hdHJpeCAqIHZlYzQodmVydGV4UG9zaXRpb24sIDEuMCk7CiAgICB0ZXhDb29yZCA9IHRleFBvc2l0aW9uOwogICAgY29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_Shaders.painter_text_vertData0 = "s436:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1hdDQgcHJvamVjdGlvbk1hdHJpeDsKCmF0dHJpYnV0ZSB2ZWMzIHZlcnRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSB2ZWMyIHRleFBvc2l0aW9uOwp2YXJ5aW5nIHZlYzQgZnJhZ21lbnRDb2xvcjsKYXR0cmlidXRlIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgdGV4Q29vcmQgPSB0ZXhQb3NpdGlvbjsKICAgIGZyYWdtZW50Q29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_Shaders.painter_text_vertData1 = "s500:I3ZlcnNpb24gMTAwCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKYXR0cmlidXRlIG1lZGl1bXAgdmVjMyB2ZXJ0ZXhQb3NpdGlvbjsKdmFyeWluZyBtZWRpdW1wIHZlYzIgdGV4Q29vcmQ7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247CnZhcnlpbmcgbWVkaXVtcCB2ZWM0IGZyYWdtZW50Q29sb3I7CmF0dHJpYnV0ZSBtZWRpdW1wIHZlYzQgdmVydGV4Q29sb3I7Cgp2b2lkIG1haW4oKQp7CiAgICBnbF9Qb3NpdGlvbiA9IHByb2plY3Rpb25NYXRyaXggKiB2ZWM0KHZlcnRleFBvc2l0aW9uLCAxLjApOwogICAgdGV4Q29vcmQgPSB0ZXhQb3NpdGlvbjsKICAgIGZyYWdtZW50Q29sb3IgPSB2ZXJ0ZXhDb2xvcjsKfQoK";
 kha_Shaders.painter_text_vertData2 = "s466:I3ZlcnNpb24gMzAwIGVzCgp1bmlmb3JtIG1lZGl1bXAgbWF0NCBwcm9qZWN0aW9uTWF0cml4OwoKaW4gbWVkaXVtcCB2ZWMzIHZlcnRleFBvc2l0aW9uOwpvdXQgbWVkaXVtcCB2ZWMyIHRleENvb3JkOwppbiBtZWRpdW1wIHZlYzIgdGV4UG9zaXRpb247Cm91dCBtZWRpdW1wIHZlYzQgZnJhZ21lbnRDb2xvcjsKaW4gbWVkaXVtcCB2ZWM0IHZlcnRleENvbG9yOwoKdm9pZCBtYWluKCkKewogICAgZ2xfUG9zaXRpb24gPSBwcm9qZWN0aW9uTWF0cml4ICogdmVjNCh2ZXJ0ZXhQb3NpdGlvbiwgMS4wKTsKICAgIHRleENvb3JkID0gdGV4UG9zaXRpb247CiAgICBmcmFnbWVudENvbG9yID0gdmVydGV4Q29sb3I7Cn0KCg";
