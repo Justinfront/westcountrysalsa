@@ -50,14 +50,17 @@ class SceneBuilder {
 		var dy = 33;
 		var px = 27;
 
-		var tx = new TextWrapper( "Classes", regular, red1, bottomTextHeader, 2, px, py );
+		var tx = new TextWrapper( "Salsa class and/or social only £5", regular, red1, bottomTextHeader - 4, 2, px, py + 2 );
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
+		var rect = new RectangleWrapper( tx.width + 33, tx.height + 3, null, 0xa0000000, 0., 0, py + 2 );
+		rect.offSide = Compass.NORTH_WEST_SMALL;
+		scene.addFrontRectangle( rect );
 		py += dy + 15;
 		var txArr = new Array<TextWrapper>();
-		var info = [ 	"Salsa classes starting Thursday 16th November"
-					,	"Beginners from 7.30pm, social dancing till late." 
-					,	"At the Rose & Crown, BA2 7SN" ];
+		var info = [ 	"Salsa class are starting on Thursday 16th November"
+					,	"Beginners from 7.30pm. Social dancing 8.30 - 11.00" 
+					,	"At the Rose & Crown, Near Bath, BA2 7SN" ];
 		for( i in 0...info.length ){
 			tx = new TextWrapper( info[ i ], regular, black, bottomTextBody, 2, px, py, false );
 			txArr[ txArr.length ] = tx;
@@ -71,30 +74,31 @@ class SceneBuilder {
 		px = 27;
 		var middle0 = 18;
 		var middle1 = 21;
-		var tx = new TextWrapper( "beginners salsa lessons in:", bold, dull, middle0, 1, px, py );
+		var middleBlack = 0xd0000000;
+		var tx = new TextWrapper( "beginners salsa lesson in:", bold, middleBlack, middle0, 1, px, py );
 		tx.offSide = Compass.NORTH_SMALL;
 		scene.addText( tx );
 		py += dy;
-		var tx = new TextWrapper( "Cross Body, Cuban, Cali", bold, dull, middle1, 2, px, py );
+		var tx = new TextWrapper( "Cross Body, Cuban, Cali", bold, middleBlack, middle1, 2, px, py );
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
 		py += dy + 9;
-		tx = new TextWrapper( "social music:", bold, dull, middle0, 1, px, py );
+		tx = new TextWrapper( "social music:", bold, middleBlack, middle0, 1, px, py );
 		tx.offSide = Compass.NORTH_SMALL;
 		scene.addText( tx );
 		py += dy;
-		tx = new TextWrapper( "Salsa, Bachata, Forro", bold, dull, middle1, 2, px, py );
+		tx = new TextWrapper( "Salsa, Bachata, Forro", bold, middleBlack, middle1, 2, px, py );
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
 		py += dy;
-		tx = new TextWrapper( "Cumbia, Kizomba", bold, dull, middle1, 2, px, py );
+		tx = new TextWrapper( "Cumbia, Kizomba", bold, middleBlack, middle1, 2, px, py );
 		tx.offSide = Compass.NORTH_WEST_SMALL;
 		scene.addText( tx );
 
-		addContact( scene, dull );
+		addContact( scene, 0xfa000000 );// dull
 		addTitle( scene, red1, red2 );
-		addMenu( scene, 0, red1, black0, black0 );
-		addCopyRight( scene, red3 );
+		addMenu( scene, 0, red1, 0xcc000000, 0xcc000000 );
+		addCopyRight( scene, red1 );
 		add( scene );
 		return scene;
 	}
@@ -146,12 +150,12 @@ class SceneBuilder {
 		var px = 1024 - 340;
 		var py = 768 - 97;
 		var dy = 23;
-		var middle1 = 21;
-		var tx = new TextWrapper( "contact:", bold, col0, middle1, 2, px, py );
+		var middle1 = 21; //col0
+		var tx = new TextWrapper( "contact:", regular, col0, middle1, 2, px, py );
 		tx.offSide = Compass.NORTH_EAST_SMALL;
 		scene.addText( tx );
 		py += dy;
-		tx = new TextWrapper( 'westcountrysalsa@gmail.com', bold, col0, middle1, 2, px, py );
+		tx = new TextWrapper( 'westcountrysalsa@gmail.com', regular, col0, middle1, 2, px, py );
 		tx.offSide = Compass.EAST_SMALL;
 		scene.addText( tx );
 	}
@@ -201,7 +205,7 @@ class SceneBuilder {
 		tx.offSide = Compass.NORTH_EAST_SMALL;
 		scene.addText( tx );
 		add( scene );
-		addMenu( scene, 2, red1, black0, black0 );
+		addMenu( scene, 2, red1, 0xcc000000, 0xcc000000 );
 		addTitle( scene, red1, red2 );
 		addCopyRight( scene, black );
 		return scene;
@@ -224,19 +228,20 @@ class SceneBuilder {
 		var rect = new RectangleWrapper( 1024, 768, Color.White, 0xFF000000, 0., 0, 0 );
 		scene.addBackRectangle( rect );
 		var imgs = [ 	Assets.images.IMG_20171028_134048
-					,	Assets.images.IMG_20171028_134103
-					,	Assets.images.IMG_20171028_134144
-					,	Assets.images.IMG_20171028_134154
 					,	Assets.images.IMG_20171028_135319
-					,	Assets.images.IMG_20171028_135432
-					,	Assets.images.IMG_20171028_135745
 					,	Assets.images.IMG_20171028_140755
+					,	Assets.images.IMG_20171028_134103
+					,	Assets.images.IMG_20171028_135432
 					,	Assets.images.IMG_20171028_140904
+					,	Assets.images.IMG_20171028_134144
+					,	Assets.images.IMG_20171028_135745
 					,	Assets.images.IMG_20171028_141142
+					,	Assets.images.IMG_20171029_WA0030
+					,	Assets.images.IMG_20171028_134154 
 					,	Assets.images.IMG_20171029_WA0000
 					,	Assets.images.IMG_20171029_WA0012
-					,	Assets.images.IMG_20171029_WA0030
-					,	Assets.images.IMG_20171029_WA0055 ];
+					
+					,	Assets.images.IMG_20171029_WA0055 ]; 
 
 		var cols = [ red2, 0xd01E13CE, 0x66EE13CE, 0xd0C68013, red2, 0xd01E13CE, 0x66EE13CE, 0xd0C68013, red2, 0xd01E13CE, 0x66EE13CE, 0xd0C68013,red2, 0xd01E13CE, 0x66EE13CE, 0xd0C68013 ]; 
 		var img: ImageWrapper;
@@ -257,6 +262,7 @@ class SceneBuilder {
 			imgWraps[ imgWraps.length ] = img;
 			px += dx + img.width;
 		}
+		var i: Int;
 		for( i in 0...imgs.length ){
 			img = new ImageWrapper( imgs[i], px + dx, py );	
 			img.alpha = 1.;
@@ -324,19 +330,22 @@ class SceneBuilder {
 	var deltaX = 0.;
 	public function updateScroller(){
 		var imgWrap = scrollImageWrapper;
+		var step = -3.;
+		var border = 2;
+		var gap = 20;
+		var totWid = 1024;
         if( imgWrap.alpha == 1. ){
 			var rectWrap = scrollRectWrapper;
-			var step = -2.;
-            deltaX += step;
-            var newPos = deltaX;
-            imgWrap.x = newPos;
-        	rectWrap.x = newPos;
-            if( imgWrap.x < -imgWrap.width/2 ) {
-                deltaX = imgWrap.width + imgWrap.x - step;
-                newPos = deltaX;
-                imgWrap.x = newPos;
-                rectWrap.x = newPos;
-            }
+			if( ( imgWrap.x + imgWrap.width + gap/2 ) < totWid ){ 
+                deltaX += (imgWrap.width - gap)/2 - gap/2 + border;
+                imgWrap.x = deltaX;
+                rectWrap.x = deltaX;
+            } else {
+            	deltaX += step;
+            	imgWrap.x = deltaX;
+        		rectWrap.x = deltaX;
+			}
+			
         } else {
             deltaX = 0.;
         }
